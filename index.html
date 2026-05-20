@@ -26,6 +26,9 @@
   --amber: #e67e22;
   --amber2: #f39c12;
   --blue: #2980b9;
+  --blue2: #7eb8f7;
+  --purple: #8e44ad;
+  --purple2: #a855f7;
   --font-d: 'Playfair Display', serif;
   --font-b: 'DM Sans', sans-serif;
   --radius: 14px;
@@ -46,18 +49,46 @@ body {
 
 /* HEADER */
 .app-header {
-  padding: 1rem 1.25rem 0.75rem;
+  padding: 1rem 1.25rem 0;
   background: rgba(10,10,10,0.97);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
+}
+.header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 0.75rem;
 }
 .app-logo { font-family: var(--font-d); font-size: 1.3rem; }
 .app-logo span { color: var(--red); }
 .header-date { font-size: 12px; color: var(--gray); }
+
+/* MAIN TABS (top level) */
+.main-tabs {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.main-tabs::-webkit-scrollbar { display: none; }
+.main-tab {
+  flex: 1;
+  padding: 0.55rem 0.5rem;
+  border: none;
+  background: none;
+  color: var(--gray2);
+  font-family: var(--font-b);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.main-tab.active { color: var(--white); border-bottom-color: var(--red); }
 
 /* SCROLL AREA */
 .scroll-area {
@@ -101,7 +132,9 @@ body {
 .nav-item.active { color: var(--red); }
 .nav-icon { font-size: 20px; line-height: 1; }
 
-/* PAGES */
+/* SECTIONS & PAGES */
+.main-section { display: none; }
+.main-section.active { display: block; }
 .page { display: none; padding: 1rem 1.25rem; }
 .page.active { display: block; }
 
@@ -132,6 +165,8 @@ body {
 .stat-value.green { color: var(--green2); }
 .stat-value.red { color: var(--red2); }
 .stat-value.amber { color: var(--amber2); }
+.stat-value.blue { color: var(--blue2); }
+.stat-value.purple { color: var(--purple2); }
 
 /* FORM ELEMENTS */
 .form-group { margin-bottom: 0.75rem; }
@@ -151,8 +186,8 @@ input, select, textarea {
 input:focus, select:focus { border-color: rgba(192,57,43,0.5); }
 select option { background: #1e1e1e; }
 textarea { resize: none; height: 70px; }
-
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.65rem; }
 
 /* BUTTONS */
 .btn {
@@ -206,13 +241,15 @@ textarea { resize: none; height: 70px; }
 .tx-icon.income { background: rgba(39,174,96,0.15); }
 .tx-icon.expense { background: rgba(192,57,43,0.15); }
 .tx-icon.car { background: rgba(41,128,185,0.15); }
+.tx-icon.personal { background: rgba(168,85,247,0.15); }
 .tx-info { flex: 1; min-width: 0; }
 .tx-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tx-date { font-size: 11px; color: var(--gray); }
 .tx-amount { font-size: 15px; font-weight: 500; flex-shrink: 0; }
 .tx-amount.income { color: var(--green2); }
 .tx-amount.expense { color: var(--red2); }
-.tx-amount.car { color: #7eb8f7; }
+.tx-amount.car { color: var(--blue2); }
+.tx-amount.personal { color: var(--purple2); }
 
 /* TAGS */
 .tag {
@@ -225,7 +262,31 @@ textarea { resize: none; height: 70px; }
 .tag-green { background: rgba(39,174,96,0.15); color: var(--green2); }
 .tag-red { background: rgba(192,57,43,0.15); color: var(--red2); }
 .tag-amber { background: rgba(230,126,34,0.15); color: var(--amber2); }
-.tag-blue { background: rgba(41,128,185,0.15); color: #7eb8f7; }
+.tag-blue { background: rgba(41,128,185,0.15); color: var(--blue2); }
+.tag-purple { background: rgba(168,85,247,0.15); color: var(--purple2); }
+
+/* CARD TARJETA */
+.card-bank {
+  background: linear-gradient(135deg, var(--surface2), var(--surface3));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  margin-bottom: 0.65rem;
+  position: relative;
+  overflow: hidden;
+}
+.card-bank::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+}
+.card-bank-name { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+.card-bank-num { font-size: 11px; color: var(--gray); margin-bottom: 0.6rem; font-family: monospace; letter-spacing: 0.05em; }
+.card-bank-balance { font-family: var(--font-d); font-size: 1.5rem; }
+.card-bank-limit { font-size: 11px; color: var(--gray); margin-top: 2px; }
 
 /* PROGRESS BAR */
 .progress-wrap { margin: 0.5rem 0; }
@@ -235,9 +296,11 @@ textarea { resize: none; height: 70px; }
 .fill-green { background: var(--green2); }
 .fill-red { background: var(--red2); }
 .fill-amber { background: var(--amber2); }
+.fill-blue { background: var(--blue2); }
+.fill-purple { background: var(--purple2); }
 
 /* HASHTAG */
-.htag { display: inline-block; background: rgba(255,255,255,0.05); color: #7eb8f7; font-size: 12px; padding: 4px 9px; border-radius: 6px; margin: 3px 3px 0 0; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
+.htag { display: inline-block; background: rgba(255,255,255,0.05); color: var(--blue2); font-size: 12px; padding: 4px 9px; border-radius: 6px; margin: 3px 3px 0 0; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
 .htag.selected { background: rgba(192,57,43,0.2); color: var(--red2); border-color: rgba(192,57,43,0.3); }
 
 /* CAPTION RESULT */
@@ -312,240 +375,339 @@ textarea { resize: none; height: 70px; }
 /* SECTION HEADER */
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
 .section-header h3 { font-size: 14px; font-weight: 500; }
+
+/* SUB NAV (within a section) */
+.sub-nav {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem 0;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.sub-nav::-webkit-scrollbar { display: none; }
+.sub-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-family: var(--font-b);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--gray);
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.sub-btn.active { background: var(--red); color: white; border-color: var(--red); }
 </style>
 </head>
 <body>
 
 <div class="app-header">
-  <div class="app-logo">Adicto <span>Pic</span></div>
-  <div class="header-date" id="header-date"></div>
+  <div class="header-top">
+    <div class="app-logo">Adicto <span>Pic</span></div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+  <!-- MAIN TABS -->
+  <div class="main-tabs">
+    <button class="main-tab active" onclick="showMain('personal', this)">🏠 Personal</button>
+    <button class="main-tab" onclick="showMain('fotografia', this)">📸 Fotografía</button>
+    <button class="main-tab" onclick="showMain('auto', this)">🚗 Auto</button>
+  </div>
 </div>
 
-<div class="scroll-area">
+<div class="scroll-area" id="scroll-area">
 
-  <!-- HOME -->
-  <div class="page active" id="page-home">
-    <div class="page-label">Dashboard</div>
-    <div class="page-title">Buen día 📸</div>
-
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Ingresos este mes</div>
-        <div class="stat-value green" id="home-ingresos">RD$0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Gastos este mes</div>
-        <div class="stat-value red" id="home-gastos">RD$0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Balance</div>
-        <div class="stat-value" id="home-balance">RD$0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Sesiones este mes</div>
-        <div class="stat-value amber" id="home-sesiones">0</div>
-      </div>
+  <!-- ===== SECCIÓN PERSONAL ===== -->
+  <div class="main-section active" id="section-personal">
+    <!-- Sub nav -->
+    <div class="sub-nav">
+      <button class="sub-btn active" onclick="showSub('personal','resumen',this)">Resumen</button>
+      <button class="sub-btn" onclick="showSub('personal','gastos',this)">Gastos</button>
+      <button class="sub-btn" onclick="showSub('personal','tarjetas',this)">Tarjetas</button>
     </div>
 
-    <div class="card">
-      <div class="card-label">Publicar hoy</div>
-      <div id="home-publish-tip" style="font-size:14px;color:var(--gray);line-height:1.6"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-label">Últimas transacciones</div>
-      <div id="home-recent-tx"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-label">Gasolina — próxima carga estimada</div>
-      <div id="home-gas" style="font-size:14px;color:var(--gray)">Sin registros de carro aún.</div>
-    </div>
-  </div>
-
-  <!-- FINANZAS -->
-  <div class="page" id="page-finanzas">
-    <div class="page-label">Dinero</div>
-    <div class="page-title">Mis finanzas</div>
-
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Ingresos mes</div>
-        <div class="stat-value green" id="fin-ingresos">RD$0</div>
+    <!-- RESUMEN PERSONAL -->
+    <div class="page active" id="personal-resumen">
+      <div class="page-label">Personal</div>
+      <div class="page-title">Mi vida 🏠</div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Gastos hogar este mes</div>
+          <div class="stat-value purple" id="p-total-mes">RD$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total tarjetas</div>
+          <div class="stat-value red" id="p-total-tarjetas">RD$0</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Gastos mes</div>
-        <div class="stat-value red" id="fin-gastos">RD$0</div>
+      <div class="card">
+        <div class="card-label">Últimos gastos personales</div>
+        <div id="p-recent-list"></div>
       </div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Balance neto</div>
-        <div class="stat-value" id="fin-balance">RD$0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Mejor mes</div>
-        <div class="stat-value green" id="fin-best">RD$0</div>
+      <div class="card">
+        <div class="card-label">Consumo por tarjeta este mes</div>
+        <div id="p-card-summary"></div>
       </div>
     </div>
 
-    <button class="btn btn-red" onclick="openModal('modal-tx')" style="margin-bottom:0.85rem">+ Agregar transacción</button>
-
-    <div class="section-header">
-      <h3>Historial</h3>
-      <select id="fin-filter" onchange="renderFinanzas()" style="width:auto;font-size:12px;padding:4px 8px">
-        <option value="all">Todos</option>
-        <option value="income">Ingresos</option>
-        <option value="expense">Gastos</option>
-      </select>
-    </div>
-    <div class="tx-list" id="fin-list"></div>
-  </div>
-
-  <!-- CARRO -->
-  <div class="page" id="page-carro">
-    <div class="page-label">Vehículo</div>
-    <div class="page-title">Gastos del carro</div>
-
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Gasto total carro</div>
-        <div class="stat-value amber" id="car-total">RD$0</div>
+    <!-- GASTOS PERSONALES -->
+    <div class="page" id="personal-gastos">
+      <div class="page-label">Personal</div>
+      <div class="page-title">Gastos del hogar</div>
+      <button class="btn btn-red" onclick="openModal('modal-personal')" style="margin-bottom:0.85rem">+ Agregar gasto personal</button>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Este mes</div>
+          <div class="stat-value purple" id="p-mes-stat">RD$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total acumulado</div>
+          <div class="stat-value" id="p-total-stat">RD$0</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Este mes</div>
-        <div class="stat-value" id="car-month">RD$0</div>
-      </div>
-    </div>
-
-    <button class="btn btn-red" onclick="openModal('modal-car')" style="margin-bottom:0.85rem">+ Agregar gasto de carro</button>
-
-    <div class="card">
-      <div class="card-label">Resumen por categoría</div>
-      <div id="car-summary"></div>
-    </div>
-
-    <div class="section-header" style="margin-top:0.5rem">
-      <h3>Historial</h3>
-    </div>
-    <div class="tx-list" id="car-list"></div>
-  </div>
-
-  <!-- INSTAGRAM -->
-  <div class="page" id="page-ig">
-    <div class="page-label">Redes sociales</div>
-    <div class="page-title">Instagram</div>
-
-    <!-- Captions -->
-    <div class="card">
-      <div class="card-label">Generar caption con IA</div>
-      <div class="form-group">
-        <label class="form-label">Tipo de sesión</label>
-        <select id="ig-type">
-          <option value="retrato">Retrato / Sesión personal</option>
-          <option value="cumpleaños">Cumpleaños / Evento</option>
-          <option value="comercial">Fotografía comercial</option>
-          <option value="calle">Fotografía de calle</option>
-          <option value="pareja">Sesión de pareja</option>
+      <div class="section-header">
+        <h3>Historial</h3>
+        <select id="p-filter" onchange="renderPersonalGastos()" style="width:auto;font-size:12px;padding:4px 8px">
+          <option value="all">Todos</option>
+          <option value="Alimentación">Alimentación</option>
+          <option value="Servicios">Servicios</option>
+          <option value="Salud">Salud</option>
+          <option value="Entretenimiento">Entretenimiento</option>
+          <option value="Ropa">Ropa</option>
+          <option value="Otro">Otro</option>
         </select>
       </div>
-      <div class="row2">
-        <div class="form-group">
-          <label class="form-label">Tono</label>
-          <select id="ig-tone">
-            <option value="misterioso">Misterioso</option>
-            <option value="poetico">Poético</option>
-            <option value="directo">Directo</option>
-            <option value="elegante">Elegante</option>
-            <option value="divertido">Divertido</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Idioma</label>
-          <select id="ig-lang">
-            <option value="español">Español</option>
-            <option value="spanglish">Spanglish</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Detalles (opcional)</label>
-        <textarea id="ig-extra" placeholder="Ej: vestido rojo, jardín, noche..."></textarea>
-      </div>
-      <button class="btn btn-red" onclick="generateCaption()" id="ig-gen-btn">✨ Generar caption</button>
-      <div class="dots" id="ig-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-      <div class="result-box" id="ig-result"></div>
-      <button class="btn btn-ghost" id="ig-copy-btn" onclick="copyCaption()" style="margin-top:0.5rem;display:none">📋 Copiar caption</button>
+      <div class="tx-list" id="p-gastos-list"></div>
     </div>
 
-    <!-- Calendario -->
-    <div class="card">
-      <div class="card-label">Calendario semanal</div>
-      <div class="cal-grid" id="ig-cal"></div>
-      <div style="font-size:12px;color:var(--gray);line-height:1.6">
-        ⏰ Mejores horas: <strong style="color:var(--white)">12pm–1pm</strong> y <strong style="color:var(--white)">7pm–9pm</strong>
+    <!-- TARJETAS -->
+    <div class="page" id="personal-tarjetas">
+      <div class="page-label">Personal</div>
+      <div class="page-title">Mis tarjetas 💳</div>
+      <div class="row2" style="margin-bottom:0.85rem">
+        <button class="btn btn-red" onclick="openModal('modal-tarjeta')">+ Tarjeta</button>
+        <button class="btn btn-ghost" onclick="openModal('modal-consumo')">+ Consumo</button>
       </div>
-    </div>
-
-    <!-- Hashtags -->
-    <div class="card">
-      <div class="card-label">Banco de hashtags</div>
-      <div id="ig-hashtags"></div>
+      <div id="tarjetas-list"></div>
       <hr class="divider">
-      <div id="ig-selected-preview" style="font-size:12px;color:#7eb8f7;line-height:2;min-height:20px;margin-bottom:0.5rem"></div>
-      <button class="btn btn-ghost" onclick="copyHashtags()">📋 Copiar seleccionados (<span id="ig-htag-count">0</span>)</button>
-    </div>
-
-    <!-- Reels -->
-    <div class="card">
-      <div class="card-label">Ideas para Reels</div>
-      <div id="ig-reels"></div>
+      <div class="section-header">
+        <h3>Consumos recientes</h3>
+      </div>
+      <div class="tx-list" id="consumos-list"></div>
     </div>
   </div>
 
-  <!-- CLIENTES -->
-  <div class="page" id="page-clientes">
-    <div class="page-label">CRM</div>
-    <div class="page-title">Mis clientes</div>
+  <!-- ===== SECCIÓN FOTOGRAFÍA ===== -->
+  <div class="main-section" id="section-fotografia">
+    <div class="sub-nav">
+      <button class="sub-btn active" onclick="showSub('fotografia','dashboard',this)">Dashboard</button>
+      <button class="sub-btn" onclick="showSub('fotografia','finanzas',this)">Finanzas</button>
+      <button class="sub-btn" onclick="showSub('fotografia','clientes',this)">Clientes</button>
+      <button class="sub-btn" onclick="showSub('fotografia','instagram',this)">Instagram</button>
+    </div>
 
-    <button class="btn btn-red" onclick="openModal('modal-cliente')" style="margin-bottom:0.85rem">+ Agregar cliente</button>
-
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Total clientes</div>
-        <div class="stat-value" id="cl-total">0</div>
+    <!-- DASHBOARD FOTO -->
+    <div class="page active" id="fotografia-dashboard">
+      <div class="page-label">Fotografía</div>
+      <div class="page-title">Buen día 📸</div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Ingresos este mes</div>
+          <div class="stat-value green" id="f-ingresos">RD$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Gastos este mes</div>
+          <div class="stat-value red" id="f-gastos">RD$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Balance foto</div>
+          <div class="stat-value" id="f-balance">RD$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sesiones completadas</div>
+          <div class="stat-value amber" id="f-sesiones">0</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Pendientes</div>
-        <div class="stat-value amber" id="cl-pending">0</div>
+      <div class="card">
+        <div class="card-label">Publicar hoy</div>
+        <div id="f-publish-tip" style="font-size:14px;color:var(--gray);line-height:1.6"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Últimas transacciones</div>
+        <div id="f-recent-tx"></div>
       </div>
     </div>
 
-    <div id="cl-list" class="tx-list"></div>
+    <!-- FINANZAS FOTO -->
+    <div class="page" id="fotografia-finanzas">
+      <div class="page-label">Fotografía</div>
+      <div class="page-title">Mis finanzas</div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Ingresos mes</div>
+          <div class="stat-value green" id="fin-ingresos">RD$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Gastos mes</div>
+          <div class="stat-value red" id="fin-gastos">RD$0</div>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Balance neto</div>
+          <div class="stat-value" id="fin-balance">RD$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Mejor mes</div>
+          <div class="stat-value green" id="fin-best">RD$0</div>
+        </div>
+      </div>
+      <button class="btn btn-red" onclick="openModal('modal-tx')" style="margin-bottom:0.85rem">+ Agregar transacción</button>
+      <div class="section-header">
+        <h3>Historial</h3>
+        <select id="fin-filter" onchange="renderFinanzas()" style="width:auto;font-size:12px;padding:4px 8px">
+          <option value="all">Todos</option>
+          <option value="income">Ingresos</option>
+          <option value="expense">Gastos</option>
+        </select>
+      </div>
+      <div class="tx-list" id="fin-list"></div>
+    </div>
+
+    <!-- CLIENTES -->
+    <div class="page" id="fotografia-clientes">
+      <div class="page-label">CRM</div>
+      <div class="page-title">Mis clientes</div>
+      <button class="btn btn-red" onclick="openModal('modal-cliente')" style="margin-bottom:0.85rem">+ Agregar cliente</button>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total clientes</div>
+          <div class="stat-value" id="cl-total">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pendientes</div>
+          <div class="stat-value amber" id="cl-pending">0</div>
+        </div>
+      </div>
+      <div id="cl-list" class="tx-list"></div>
+    </div>
+
+    <!-- INSTAGRAM -->
+    <div class="page" id="fotografia-instagram">
+      <div class="page-label">Redes sociales</div>
+      <div class="page-title">Instagram</div>
+
+      <div class="card">
+        <div class="card-label">Generar caption con IA</div>
+        <div class="form-group">
+          <label class="form-label">Tipo de sesión</label>
+          <select id="ig-type">
+            <option value="retrato">Retrato / Sesión personal</option>
+            <option value="cumpleaños">Cumpleaños / Evento</option>
+            <option value="comercial">Fotografía comercial</option>
+            <option value="calle">Fotografía de calle</option>
+            <option value="pareja">Sesión de pareja</option>
+          </select>
+        </div>
+        <div class="row2">
+          <div class="form-group">
+            <label class="form-label">Tono</label>
+            <select id="ig-tone">
+              <option value="misterioso">Misterioso</option>
+              <option value="poetico">Poético</option>
+              <option value="directo">Directo</option>
+              <option value="elegante">Elegante</option>
+              <option value="divertido">Divertido</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Idioma</label>
+            <select id="ig-lang">
+              <option value="español">Español</option>
+              <option value="spanglish">Spanglish</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Detalles (opcional)</label>
+          <textarea id="ig-extra" placeholder="Ej: vestido rojo, jardín, noche..."></textarea>
+        </div>
+        <button class="btn btn-red" onclick="generateCaption()" id="ig-gen-btn">✨ Generar caption</button>
+        <div class="dots" id="ig-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="result-box" id="ig-result"></div>
+        <button class="btn btn-ghost" id="ig-copy-btn" onclick="copyCaption()" style="margin-top:0.5rem;display:none">📋 Copiar caption</button>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Calendario semanal</div>
+        <div class="cal-grid" id="ig-cal"></div>
+        <div style="font-size:12px;color:var(--gray);line-height:1.6">
+          ⏰ Mejores horas: <strong style="color:var(--white)">12pm–1pm</strong> y <strong style="color:var(--white)">7pm–9pm</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Banco de hashtags</div>
+        <div id="ig-hashtags"></div>
+        <hr class="divider">
+        <div id="ig-selected-preview" style="font-size:12px;color:var(--blue2);line-height:2;min-height:20px;margin-bottom:0.5rem"></div>
+        <button class="btn btn-ghost" onclick="copyHashtags()">📋 Copiar seleccionados (<span id="ig-htag-count">0</span>)</button>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Ideas para Reels</div>
+        <div id="ig-reels"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECCIÓN AUTO ===== -->
+  <div class="main-section" id="section-auto">
+    <div class="sub-nav">
+      <button class="sub-btn active" onclick="showSub('auto','resumen',this)">Resumen</button>
+      <button class="sub-btn" onclick="showSub('auto','historial',this)">Historial</button>
+    </div>
+
+    <!-- RESUMEN AUTO -->
+    <div class="page active" id="auto-resumen">
+      <div class="page-label">Vehículo</div>
+      <div class="page-title">Mi auto 🚗</div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Gasto total</div>
+          <div class="stat-value amber" id="car-total">RD$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Este mes</div>
+          <div class="stat-value blue" id="car-month">RD$0</div>
+        </div>
+      </div>
+      <button class="btn btn-red" onclick="openModal('modal-car')" style="margin-bottom:0.85rem">+ Agregar gasto de auto</button>
+      <div class="card">
+        <div class="card-label">Resumen por categoría</div>
+        <div id="car-summary"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Gasolina — consumo estimado</div>
+        <div id="home-gas" style="font-size:14px;color:var(--gray);line-height:1.6">Sin registros de gasolina aún.</div>
+      </div>
+    </div>
+
+    <!-- HISTORIAL AUTO -->
+    <div class="page" id="auto-historial">
+      <div class="page-label">Vehículo</div>
+      <div class="page-title">Historial</div>
+      <button class="btn btn-red" onclick="openModal('modal-car')" style="margin-bottom:0.85rem">+ Agregar gasto de auto</button>
+      <div class="tx-list" id="car-list"></div>
+    </div>
   </div>
 
 </div><!-- end scroll-area -->
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="showPage('home',this)">
-    <span class="nav-icon">🏠</span>Inicio
-  </button>
-  <button class="nav-item" onclick="showPage('finanzas',this)">
-    <span class="nav-icon">💰</span>Finanzas
-  </button>
-  <button class="nav-item" onclick="showPage('carro',this)">
-    <span class="nav-icon">🚗</span>Carro
-  </button>
-  <button class="nav-item" onclick="showPage('ig',this)">
-    <span class="nav-icon">📸</span>Instagram
-  </button>
-  <button class="nav-item" onclick="showPage('clientes',this)">
-    <span class="nav-icon">👥</span>Clientes
-  </button>
-</nav>
+<!-- ===== MODALES ===== -->
 
-<!-- MODAL: TRANSACCION -->
+<!-- TRANSACCIÓN FOTO -->
 <div class="modal-overlay" id="modal-tx" onclick="closeModalOutside(event,'modal-tx')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -589,11 +751,11 @@ textarea { resize: none; height: 70px; }
   </div>
 </div>
 
-<!-- MODAL: CARRO -->
+<!-- GASTO AUTO -->
 <div class="modal-overlay" id="modal-car" onclick="closeModalOutside(event,'modal-car')">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">Gasto del carro</div>
+    <div class="modal-title">Gasto del auto</div>
     <div class="form-group">
       <label class="form-label">Categoría</label>
       <select id="car-cat">
@@ -622,7 +784,7 @@ textarea { resize: none; height: 70px; }
         <input type="date" id="car-date">
       </div>
     </div>
-    <div class="form-group" id="km-group">
+    <div class="form-group">
       <label class="form-label">Kilómetros actuales (para gasolina)</label>
       <input type="number" id="car-km" placeholder="Ej: 45000">
     </div>
@@ -631,7 +793,7 @@ textarea { resize: none; height: 70px; }
   </div>
 </div>
 
-<!-- MODAL: CLIENTE -->
+<!-- CLIENTE -->
 <div class="modal-overlay" id="modal-cliente" onclick="closeModalOutside(event,'modal-cliente')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -685,6 +847,122 @@ textarea { resize: none; height: 70px; }
   </div>
 </div>
 
+<!-- GASTO PERSONAL -->
+<div class="modal-overlay" id="modal-personal" onclick="closeModalOutside(event,'modal-personal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Gasto personal</div>
+    <div class="form-group">
+      <label class="form-label">Descripción</label>
+      <input type="text" id="p-desc" placeholder="Ej: Supermercado, Electricidad...">
+    </div>
+    <div class="row2">
+      <div class="form-group">
+        <label class="form-label">Monto (RD$)</label>
+        <input type="number" id="p-amount" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha</label>
+        <input type="date" id="p-date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Categoría</label>
+      <select id="p-cat">
+        <option value="Alimentación">🛒 Alimentación</option>
+        <option value="Servicios">💡 Servicios (luz, agua, internet)</option>
+        <option value="Salud">🏥 Salud / Farmacia</option>
+        <option value="Entretenimiento">🎬 Entretenimiento</option>
+        <option value="Ropa">👕 Ropa / Calzado</option>
+        <option value="Hogar">🏠 Hogar / Limpieza</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tarjeta usada (opcional)</label>
+      <select id="p-card-used">
+        <option value="">— Efectivo / Sin tarjeta —</option>
+      </select>
+    </div>
+    <button class="btn btn-red" onclick="savePersonalGasto()">Guardar</button>
+    <button class="btn btn-ghost" onclick="closeModal('modal-personal')" style="margin-top:0.5rem">Cancelar</button>
+  </div>
+</div>
+
+<!-- NUEVA TARJETA -->
+<div class="modal-overlay" id="modal-tarjeta" onclick="closeModalOutside(event,'modal-tarjeta')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nueva tarjeta</div>
+    <div class="form-group">
+      <label class="form-label">Nombre de la tarjeta</label>
+      <input type="text" id="t-name" placeholder="Ej: Visa Popular, Amex BHD...">
+    </div>
+    <div class="row2">
+      <div class="form-group">
+        <label class="form-label">Últimos 4 dígitos</label>
+        <input type="number" id="t-num" placeholder="1234" maxlength="4">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Límite (RD$)</label>
+        <input type="number" id="t-limit" placeholder="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Color</label>
+      <select id="t-color">
+        <option value="red">🔴 Rojo</option>
+        <option value="blue">🔵 Azul</option>
+        <option value="green">🟢 Verde</option>
+        <option value="amber">🟠 Naranja</option>
+        <option value="purple">🟣 Morado</option>
+      </select>
+    </div>
+    <button class="btn btn-red" onclick="saveTarjeta()">Guardar tarjeta</button>
+    <button class="btn btn-ghost" onclick="closeModal('modal-tarjeta')" style="margin-top:0.5rem">Cancelar</button>
+  </div>
+</div>
+
+<!-- CONSUMO EN TARJETA -->
+<div class="modal-overlay" id="modal-consumo" onclick="closeModalOutside(event,'modal-consumo')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Agregar consumo</div>
+    <div class="form-group">
+      <label class="form-label">Tarjeta</label>
+      <select id="c-card"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción</label>
+      <input type="text" id="c-desc" placeholder="Ej: Netflix, Restaurante, Gasolina...">
+    </div>
+    <div class="row2">
+      <div class="form-group">
+        <label class="form-label">Monto (RD$)</label>
+        <input type="number" id="c-amount" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha</label>
+        <input type="date" id="c-date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Categoría</label>
+      <select id="c-cat">
+        <option value="Alimentación">🛒 Alimentación</option>
+        <option value="Servicios">💡 Servicios</option>
+        <option value="Entretenimiento">🎬 Entretenimiento</option>
+        <option value="Salud">🏥 Salud</option>
+        <option value="Ropa">👕 Ropa</option>
+        <option value="Viaje">✈️ Viaje</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <button class="btn btn-red" onclick="saveConsumo()">Guardar consumo</button>
+    <button class="btn btn-ghost" onclick="closeModal('modal-consumo')" style="margin-top:0.5rem">Cancelar</button>
+  </div>
+</div>
+
 <script>
 // ============ STORAGE ============
 const S = {
@@ -695,126 +973,332 @@ const S = {
 
 // ============ DATA ============
 let transactions = S.get('ap_tx');
-let carExpenses = S.get('ap_car');
-let clients = S.get('ap_clients');
+let carExpenses  = S.get('ap_car');
+let clients      = S.get('ap_clients');
+let personalGastos = S.get('ap_personal');
+let tarjetas     = S.get('ap_tarjetas');
+let consumos     = S.get('ap_consumos');
 let selectedHashtags = new Set();
 
 // ============ HELPERS ============
 const fmt = n => 'RD$' + Number(n).toLocaleString('es-DO');
 const today = () => new Date().toISOString().split('T')[0];
 const thisMonth = () => new Date().toISOString().slice(0,7);
-
 function monthOf(dateStr) { return dateStr ? dateStr.slice(0,7) : ''; }
 
+const COLOR_MAP = {
+  red: { bg:'rgba(192,57,43,0.25)', text:'var(--red2)' },
+  blue: { bg:'rgba(41,128,185,0.25)', text:'var(--blue2)' },
+  green: { bg:'rgba(39,174,96,0.25)', text:'var(--green2)' },
+  amber: { bg:'rgba(230,126,34,0.25)', text:'var(--amber2)' },
+  purple: { bg:'rgba(168,85,247,0.25)', text:'var(--purple2)' }
+};
+
 // ============ NAV ============
-function showPage(name, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active','fade');
+let currentMain = 'personal';
+let currentSubs = { personal:'resumen', fotografia:'dashboard', auto:'resumen' };
+
+function showMain(name, btn) {
+  document.querySelectorAll('.main-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-'+name).classList.add('active');
   btn.classList.add('active');
-  if(name==='home') renderHome();
-  if(name==='finanzas') renderFinanzas();
-  if(name==='carro') renderCarro();
-  if(name==='ig') renderIG();
-  if(name==='clientes') renderClientes();
+  currentMain = name;
+  document.getElementById('scroll-area').scrollTop = 0;
+  refreshSection(name);
+}
+
+function showSub(section, sub, btn) {
+  const sec = document.getElementById('section-'+section);
+  sec.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  sec.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+  const page = document.getElementById(section+'-'+sub);
+  if(page) { page.classList.add('active','fade'); }
+  btn.classList.add('active');
+  currentSubs[section] = sub;
+  document.getElementById('scroll-area').scrollTop = 0;
+  renderSubPage(section, sub);
+}
+
+function refreshSection(name) {
+  renderSubPage(name, currentSubs[name]);
+}
+
+function renderSubPage(section, sub) {
+  if(section==='personal') {
+    if(sub==='resumen') renderPersonalResumen();
+    if(sub==='gastos') renderPersonalGastos();
+    if(sub==='tarjetas') renderTarjetas();
+  }
+  if(section==='fotografia') {
+    if(sub==='dashboard') renderFotoDashboard();
+    if(sub==='finanzas') renderFinanzas();
+    if(sub==='clientes') renderClientes();
+    if(sub==='instagram') renderIG();
+  }
+  if(section==='auto') {
+    if(sub==='resumen') renderCarroResumen();
+    if(sub==='historial') renderCarroHistorial();
+  }
 }
 
 // ============ MODALS ============
 function openModal(id) {
   document.getElementById(id).classList.add('open');
-  // Set default dates
-  const dateInputs = document.querySelectorAll('#'+id+' input[type="date"]');
-  dateInputs.forEach(d => { if(!d.value) d.value = today(); });
+  document.querySelectorAll('#'+id+' input[type="date"]').forEach(d => { if(!d.value) d.value = today(); });
+  if(id==='modal-personal') populateCardSelect('p-card-used');
+  if(id==='modal-consumo') populateCardSelect('c-card');
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function closeModalOutside(e, id) { if(e.target.id===id) closeModal(id); }
 
-// ============ HOME ============
-function renderHome() {
+function populateCardSelect(elId) {
+  const sel = document.getElementById(elId);
+  const isOptional = elId === 'p-card-used';
+  sel.innerHTML = isOptional ? '<option value="">— Efectivo / Sin tarjeta —</option>' : '';
+  tarjetas.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = `${t.name} •••• ${t.num}`;
+    sel.appendChild(opt);
+  });
+}
+
+// ============ PERSONAL — RESUMEN ============
+function renderPersonalResumen() {
   const m = thisMonth();
-  const inc = transactions.filter(t=>t.type==='income'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
-  const exp = transactions.filter(t=>t.type==='expense'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
-  const carExp = carExpenses.filter(t=>monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
-  const bal = inc - exp - carExp;
-  const ses = clients.filter(c=>c.date&&monthOf(c.date)===m&&c.status==='completado').length;
+  const totalMes = personalGastos.filter(g=>monthOf(g.date)===m).reduce((s,g)=>s+g.amount,0);
+  const totalTarjetas = consumos.filter(c=>monthOf(c.date)===m).reduce((s,c)=>s+c.amount,0);
+  document.getElementById('p-total-mes').textContent = fmt(totalMes);
+  document.getElementById('p-total-tarjetas').textContent = fmt(totalTarjetas);
 
-  document.getElementById('home-ingresos').textContent = fmt(inc);
-  document.getElementById('home-gastos').textContent = fmt(exp+carExp);
-  const balEl = document.getElementById('home-balance');
-  balEl.textContent = fmt(Math.abs(bal));
-  balEl.className = 'stat-value ' + (bal>=0?'green':'red');
-  document.getElementById('home-sesiones').textContent = ses;
+  // Recent gastos
+  const recent = [...personalGastos].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
+  const rEl = document.getElementById('p-recent-list');
+  if(!recent.length) { rEl.innerHTML = '<div class="empty"><div class="empty-icon">🏠</div>Sin gastos personales aún</div>'; }
+  else rEl.innerHTML = recent.map(g=>`
+    <div class="tx-item">
+      <div class="tx-icon personal">🏠</div>
+      <div class="tx-info"><div class="tx-name">${g.desc}</div><div class="tx-date">${g.date} · ${g.cat}</div></div>
+      <div class="tx-amount personal">-${fmt(g.amount)}</div>
+    </div>`).join('');
 
-  // Publish tip
-  const dow = new Date().getDay();
-  const tips = {1:'📸 Hoy es lunes — sube una foto de trabajo entre 12pm y 1pm.',3:'🎬 Hoy es miércoles — ideal para publicar un Reel. ¡Hazlo!',5:'📸 Hoy es viernes — publica una foto entre 7pm y 9pm.',0:'📖 Hoy es domingo — sube una historia o encuesta.'};
-  document.getElementById('home-publish-tip').textContent = tips[dow] || '💡 Hoy no es día de publicar, pero puedes preparar contenido para mañana.';
+  // Card summary
+  const cardSummary = {};
+  consumos.filter(c=>monthOf(c.date)===m).forEach(c=>{
+    if(!cardSummary[c.cardId]) cardSummary[c.cardId] = 0;
+    cardSummary[c.cardId] += c.amount;
+  });
+  const csEl = document.getElementById('p-card-summary');
+  if(!Object.keys(cardSummary).length) { csEl.innerHTML = '<div style="font-size:13px;color:var(--gray)">Sin consumos en tarjetas este mes.</div>'; return; }
+  csEl.innerHTML = Object.entries(cardSummary).map(([cid, total])=>{
+    const t = tarjetas.find(t=>t.id==cid);
+    if(!t) return '';
+    const col = COLOR_MAP[t.color] || COLOR_MAP.blue;
+    return `<div class="meta-row"><span class="meta-key" style="color:${col.text}">${t.name} ••${t.num}</span><span>${fmt(total)}</span></div>`;
+  }).join('');
+}
 
-  // Recent tx
-  const recent = [...transactions, ...carExpenses.map(c=>({...c,type:'car',desc:c.cat+': '+c.desc}))].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
-  const rtEl = document.getElementById('home-recent-tx');
-  if(!recent.length) { rtEl.innerHTML = '<div class="empty"><div class="empty-icon">💸</div>Sin transacciones aún</div>'; return; }
-  rtEl.innerHTML = recent.map(t => txItemHTML(t)).join('');
+// ============ PERSONAL — GASTOS ============
+function renderPersonalGastos() {
+  const m = thisMonth();
+  const filter = document.getElementById('p-filter')?.value || 'all';
+  const mes = personalGastos.filter(g=>monthOf(g.date)===m).reduce((s,g)=>s+g.amount,0);
+  const total = personalGastos.reduce((s,g)=>s+g.amount,0);
+  document.getElementById('p-mes-stat').textContent = fmt(mes);
+  document.getElementById('p-total-stat').textContent = fmt(total);
 
-  // Gas
-  const gasEntries = carExpenses.filter(c=>c.cat==='Gasolina'&&c.km).sort((a,b)=>b.km-a.km);
-  if(gasEntries.length>=2) {
-    const last = gasEntries[0], prev = gasEntries[1];
-    const kmDiff = last.km - prev.km;
-    document.getElementById('home-gas').textContent = `Último llenado: ${fmt(last.amount)} — recorriste ${kmDiff} km desde el anterior.`;
-  } else {
-    document.getElementById('home-gas').textContent = 'Registra gastos de gasolina con km para ver el consumo.';
+  let list = [...personalGastos];
+  if(filter!=='all') list = list.filter(g=>g.cat===filter);
+  list.sort((a,b)=>b.date.localeCompare(a.date));
+
+  const el = document.getElementById('p-gastos-list');
+  if(!list.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🏠</div>Sin gastos personales</div>'; return; }
+  el.innerHTML = list.map((g,i)=>`
+    <div class="tx-item">
+      <div class="tx-icon personal">🏠</div>
+      <div class="tx-info"><div class="tx-name">${g.desc}</div><div class="tx-date">${g.date} · ${g.cat}${g.cardId?` · 💳 ${tarjetas.find(t=>t.id==g.cardId)?.name||''}`:''}</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="tx-amount personal">-${fmt(g.amount)}</div>
+        <button class="btn-sm danger" onclick="deletePersonalGasto(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function savePersonalGasto() {
+  const desc = document.getElementById('p-desc').value.trim();
+  const amount = parseFloat(document.getElementById('p-amount').value);
+  const date = document.getElementById('p-date').value;
+  if(!desc||!amount||!date) { alert('Completa los campos'); return; }
+  personalGastos.unshift({ desc, amount, date, cat:document.getElementById('p-cat').value, cardId:document.getElementById('p-card-used').value||null, id:Date.now() });
+  S.set('ap_personal', personalGastos);
+  closeModal('modal-personal');
+  document.getElementById('p-desc').value=''; document.getElementById('p-amount').value='';
+  renderPersonalGastos(); renderPersonalResumen();
+}
+
+function deletePersonalGasto(i) {
+  const filter = document.getElementById('p-filter')?.value || 'all';
+  let list = [...personalGastos];
+  if(filter!=='all') list = list.filter(g=>g.cat===filter);
+  list.sort((a,b)=>b.date.localeCompare(a.date));
+  const target = list[i];
+  if(!confirm('¿Eliminar este gasto?')) return;
+  const idx = personalGastos.findIndex(g=>g.id===target.id);
+  if(idx>-1) personalGastos.splice(idx,1);
+  S.set('ap_personal', personalGastos);
+  renderPersonalGastos(); renderPersonalResumen();
+}
+
+// ============ TARJETAS ============
+function renderTarjetas() {
+  const m = thisMonth();
+  const el = document.getElementById('tarjetas-list');
+  if(!tarjetas.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">💳</div>No tienes tarjetas registradas</div>'; }
+  else {
+    el.innerHTML = tarjetas.map((t,i)=>{
+      const col = COLOR_MAP[t.color] || COLOR_MAP.blue;
+      const gastado = consumos.filter(c=>c.cardId==t.id&&monthOf(c.date)===m).reduce((s,c)=>s+c.amount,0);
+      const pct = t.limit ? Math.min(100, Math.round(gastado/t.limit*100)) : 0;
+      const fillCls = pct>85?'fill-red':pct>60?'fill-amber':'fill-green';
+      return `<div class="card-bank" style="border-left:3px solid ${col.text}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="card-bank-name" style="color:${col.text}">${t.name}</div>
+            <div class="card-bank-num">•••• •••• •••• ${t.num}</div>
+          </div>
+          <button class="btn-sm danger" onclick="deleteTarjeta(${i})">✕</button>
+        </div>
+        <div class="card-bank-balance" style="color:${col.text}">${fmt(gastado)}</div>
+        <div class="card-bank-limit">gastado este mes${t.limit?' de '+fmt(t.limit):''}</div>
+        ${t.limit?`<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill ${fillCls}" style="width:${pct}%"></div></div></div>`:''}
+      </div>`;
+    }).join('');
   }
 
-  // Header date
-  document.getElementById('header-date').textContent = new Date().toLocaleDateString('es-DO',{weekday:'short',day:'numeric',month:'short'});
+  // Consumos list
+  const sorted = [...consumos].sort((a,b)=>b.date.localeCompare(a.date));
+  const cEl = document.getElementById('consumos-list');
+  if(!sorted.length) { cEl.innerHTML = '<div class="empty"><div class="empty-icon">💳</div>Sin consumos registrados</div>'; return; }
+  cEl.innerHTML = sorted.map((c,i)=>{
+    const t = tarjetas.find(t=>t.id==c.cardId);
+    const col = t ? (COLOR_MAP[t.color]||COLOR_MAP.blue) : COLOR_MAP.blue;
+    return `<div class="tx-item">
+      <div class="tx-icon" style="background:${col.bg};color:${col.text};font-size:14px">💳</div>
+      <div class="tx-info"><div class="tx-name">${c.desc}</div><div class="tx-date">${c.date} · ${c.cat}${t?' · '+t.name:''}</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="tx-amount" style="color:${col.text}">-${fmt(c.amount)}</div>
+        <button class="btn-sm danger" onclick="deleteConsumo(${i})">✕</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function txItemHTML(t) {
-  const isIncome = t.type==='income', isCar = t.type==='car';
-  const icon = isIncome?'💚':isCar?'🚗':'🔴';
-  const cls = isIncome?'income':isCar?'car':'expense';
-  const sign = isIncome?'+':'-';
-  return `<div class="tx-item">
-    <div class="tx-icon ${cls}">${icon}</div>
-    <div class="tx-info"><div class="tx-name">${t.desc||t.description||''}</div><div class="tx-date">${t.date||''} ${t.cat?'· '+t.cat:''}</div></div>
-    <div class="tx-amount ${cls}">${sign}${fmt(t.amount)}</div>
-  </div>`;
+function saveTarjeta() {
+  const name = document.getElementById('t-name').value.trim();
+  if(!name) { alert('Escribe el nombre de la tarjeta'); return; }
+  tarjetas.push({ name, num:document.getElementById('t-num').value.slice(-4)||'0000', limit:parseFloat(document.getElementById('t-limit').value)||0, color:document.getElementById('t-color').value, id:Date.now() });
+  S.set('ap_tarjetas', tarjetas);
+  closeModal('modal-tarjeta');
+  document.getElementById('t-name').value=''; document.getElementById('t-num').value=''; document.getElementById('t-limit').value='';
+  renderTarjetas();
 }
 
-// ============ FINANZAS ============
-function renderFinanzas() {
+function deleteTarjeta(i) {
+  if(!confirm('¿Eliminar esta tarjeta y todos sus consumos?')) return;
+  const id = tarjetas[i].id;
+  tarjetas.splice(i,1);
+  consumos = consumos.filter(c=>c.cardId!=id);
+  S.set('ap_tarjetas', tarjetas); S.set('ap_consumos', consumos);
+  renderTarjetas();
+}
+
+function saveConsumo() {
+  const cardId = document.getElementById('c-card').value;
+  const desc = document.getElementById('c-desc').value.trim();
+  const amount = parseFloat(document.getElementById('c-amount').value);
+  const date = document.getElementById('c-date').value;
+  if(!cardId||!desc||!amount||!date) { alert('Completa todos los campos'); return; }
+  consumos.unshift({ cardId, desc, amount, date, cat:document.getElementById('c-cat').value, id:Date.now() });
+  S.set('ap_consumos', consumos);
+  closeModal('modal-consumo');
+  document.getElementById('c-desc').value=''; document.getElementById('c-amount').value='';
+  renderTarjetas(); renderPersonalResumen();
+}
+
+function deleteConsumo(i) {
+  const sorted = [...consumos].sort((a,b)=>b.date.localeCompare(a.date));
+  const target = sorted[i];
+  if(!confirm('¿Eliminar este consumo?')) return;
+  const idx = consumos.findIndex(c=>c.id===target.id);
+  if(idx>-1) consumos.splice(idx,1);
+  S.set('ap_consumos', consumos);
+  renderTarjetas(); renderPersonalResumen();
+}
+
+// ============ FOTO — DASHBOARD ============
+function renderFotoDashboard() {
   const m = thisMonth();
-  const filter = document.getElementById('fin-filter').value;
   const inc = transactions.filter(t=>t.type==='income'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
   const exp = transactions.filter(t=>t.type==='expense'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
   const bal = inc - exp;
+  const ses = clients.filter(c=>c.date&&monthOf(c.date)===m&&c.status==='completado').length;
 
+  document.getElementById('f-ingresos').textContent = fmt(inc);
+  document.getElementById('f-gastos').textContent = fmt(exp);
+  const balEl = document.getElementById('f-balance');
+  balEl.textContent = fmt(Math.abs(bal));
+  balEl.className = 'stat-value '+(bal>=0?'green':'red');
+  document.getElementById('f-sesiones').textContent = ses;
+
+  const dow = new Date().getDay();
+  const tips = {1:'📸 Hoy es lunes — sube una foto de trabajo entre 12pm y 1pm.',3:'🎬 Hoy es miércoles — ideal para publicar un Reel. ¡Hazlo!',5:'📸 Hoy es viernes — publica una foto entre 7pm y 9pm.',0:'📖 Hoy es domingo — sube una historia o encuesta.'};
+  document.getElementById('f-publish-tip').textContent = tips[dow] || '💡 Hoy no es día de publicar, pero puedes preparar contenido para mañana.';
+
+  const recent = [...transactions].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
+  const rtEl = document.getElementById('f-recent-tx');
+  if(!recent.length) { rtEl.innerHTML = '<div class="empty"><div class="empty-icon">💸</div>Sin transacciones aún</div>'; return; }
+  rtEl.innerHTML = recent.map(t=>txItemHTML(t)).join('');
+}
+
+function txItemHTML(t) {
+  const isIncome = t.type==='income';
+  const cls = isIncome?'income':'expense';
+  return `<div class="tx-item">
+    <div class="tx-icon ${cls}">${isIncome?'💚':'🔴'}</div>
+    <div class="tx-info"><div class="tx-name">${t.desc||''}</div><div class="tx-date">${t.date||''} ${t.cat?'· '+t.cat:''}</div></div>
+    <div class="tx-amount ${cls}">${isIncome?'+':'-'}${fmt(t.amount)}</div>
+  </div>`;
+}
+
+// ============ FINANZAS FOTO ============
+function renderFinanzas() {
+  const m = thisMonth();
+  const filter = document.getElementById('fin-filter')?.value || 'all';
+  const inc = transactions.filter(t=>t.type==='income'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
+  const exp = transactions.filter(t=>t.type==='expense'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
+  const bal = inc - exp;
   document.getElementById('fin-ingresos').textContent = fmt(inc);
   document.getElementById('fin-gastos').textContent = fmt(exp);
   const balEl = document.getElementById('fin-balance');
   balEl.textContent = fmt(Math.abs(bal));
   balEl.className = 'stat-value '+(bal>=0?'green':'red');
-
-  // Best month
   const byMonth = {};
-  transactions.filter(t=>t.type==='income').forEach(t=>{ const m=monthOf(t.date); byMonth[m]=(byMonth[m]||0)+t.amount; });
-  const bestVal = Math.max(0,...Object.values(byMonth));
-  document.getElementById('fin-best').textContent = fmt(bestVal);
+  transactions.filter(t=>t.type==='income').forEach(t=>{ const mo=monthOf(t.date); byMonth[mo]=(byMonth[mo]||0)+t.amount; });
+  document.getElementById('fin-best').textContent = fmt(Math.max(0,...Object.values(byMonth)));
 
   let list = [...transactions];
   if(filter!=='all') list = list.filter(t=>t.type===filter);
   list.sort((a,b)=>b.date.localeCompare(a.date));
-
   const el = document.getElementById('fin-list');
   if(!list.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">💳</div>Sin transacciones</div>'; return; }
-  el.innerHTML = list.map((t,i) => `
+  el.innerHTML = list.map((t,i)=>`
     <div class="tx-item">
       <div class="tx-icon ${t.type==='income'?'income':'expense'}">${t.type==='income'?'💚':'🔴'}</div>
       <div class="tx-info"><div class="tx-name">${t.desc}</div><div class="tx-date">${t.date} · ${t.cat}</div></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         <div class="tx-amount ${t.type==='income'?'income':'expense'}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
-        <button class="btn-sm danger" onclick="deleteTx(${i})">✕</button>
+        <button class="btn-sm danger" onclick="deleteTx('${t.id}')">✕</button>
       </div>
     </div>`).join('');
 }
@@ -823,75 +1307,110 @@ function saveTx() {
   const desc = document.getElementById('tx-desc').value.trim();
   const amount = parseFloat(document.getElementById('tx-amount').value);
   const date = document.getElementById('tx-date').value;
-  const type = document.getElementById('tx-type').value;
-  const cat = document.getElementById('tx-cat').value;
   if(!desc||!amount||!date) { alert('Completa todos los campos'); return; }
-  transactions.unshift({ desc, amount, date, type, cat, id: Date.now() });
+  transactions.unshift({ desc, amount, date, type:document.getElementById('tx-type').value, cat:document.getElementById('tx-cat').value, id:Date.now() });
   S.set('ap_tx', transactions);
   closeModal('modal-tx');
   document.getElementById('tx-desc').value=''; document.getElementById('tx-amount').value='';
-  renderFinanzas(); renderHome();
+  renderFinanzas(); renderFotoDashboard();
 }
 
-function deleteTx(i) {
+function deleteTx(id) {
   if(!confirm('¿Eliminar esta transacción?')) return;
-  transactions.splice(i,1);
+  transactions = transactions.filter(t=>t.id!=id);
   S.set('ap_tx', transactions);
-  renderFinanzas(); renderHome();
+  renderFinanzas(); renderFotoDashboard();
+}
+
+// ============ CLIENTES ============
+function renderClientes() {
+  document.getElementById('cl-total').textContent = clients.length;
+  document.getElementById('cl-pending').textContent = clients.filter(c=>c.status==='pendiente'||c.status==='confirmado').length;
+  const el = document.getElementById('cl-list');
+  if(!clients.length){ el.innerHTML='<div class="empty"><div class="empty-icon">👥</div>Sin clientes registrados</div>'; return; }
+  const statusColors={pendiente:'amber',confirmado:'blue',completado:'green',cancelado:'red'};
+  el.innerHTML=[...clients].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map((c,i)=>`
+    <div class="tx-item" style="flex-direction:column;align-items:flex-start;gap:0.5rem">
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+        <div style="font-size:15px;font-weight:500">${c.name}</div>
+        <span class="tag tag-${statusColors[c.status]||'amber'}">${c.status}</span>
+      </div>
+      <div style="font-size:13px;color:var(--gray)">${c.session} · ${c.date||'Sin fecha'} · ${fmt(c.amount||0)}</div>
+      ${c.phone?`<div style="font-size:13px;color:var(--blue2)">${c.phone}</div>`:''}
+      ${c.notes?`<div style="font-size:12px;color:var(--gray2)">${c.notes}</div>`:''}
+      <button class="btn-sm danger" onclick="deleteCliente(${i})" style="align-self:flex-end">✕ Eliminar</button>
+    </div>`).join('');
+}
+
+function saveCliente() {
+  const name = document.getElementById('cl-name').value.trim();
+  if(!name){ alert('Escribe el nombre del cliente'); return; }
+  clients.unshift({ name, phone:document.getElementById('cl-phone').value.trim(), session:document.getElementById('cl-session').value, status:document.getElementById('cl-status').value, date:document.getElementById('cl-date').value, amount:parseFloat(document.getElementById('cl-amount').value)||0, notes:document.getElementById('cl-notes').value.trim(), id:Date.now() });
+  S.set('ap_clients', clients);
+  closeModal('modal-cliente');
+  ['cl-name','cl-phone','cl-date','cl-amount','cl-notes'].forEach(id=>document.getElementById(id).value='');
+  renderClientes();
+}
+
+function deleteCliente(i) {
+  if(!confirm('¿Eliminar este cliente?')) return;
+  clients.splice(i,1);
+  S.set('ap_clients', clients);
+  renderClientes();
 }
 
 // ============ CARRO ============
-function renderCarro() {
+function renderCarroResumen() {
   const m = thisMonth();
-  const total = carExpenses.reduce((s,t)=>s+t.amount,0);
-  const month = carExpenses.filter(t=>monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
-  document.getElementById('car-total').textContent = fmt(total);
-  document.getElementById('car-month').textContent = fmt(month);
-
-  // Summary by cat
+  document.getElementById('car-total').textContent = fmt(carExpenses.reduce((s,t)=>s+t.amount,0));
+  document.getElementById('car-month').textContent = fmt(carExpenses.filter(t=>monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0));
   const cats = {};
   carExpenses.forEach(t=>{ cats[t.cat]=(cats[t.cat]||0)+t.amount; });
   const sumEl = document.getElementById('car-summary');
-  if(!Object.keys(cats).length) { sumEl.innerHTML = '<div style="font-size:13px;color:var(--gray)">Sin gastos registrados.</div>'; }
-  else {
-    sumEl.innerHTML = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`
-      <div class="meta-row"><span class="meta-key">${cat}</span><span>${fmt(val)}</span></div>`).join('');
-  }
+  if(!Object.keys(cats).length) sumEl.innerHTML = '<div style="font-size:13px;color:var(--gray)">Sin gastos registrados.</div>';
+  else sumEl.innerHTML = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`<div class="meta-row"><span class="meta-key">${cat}</span><span>${fmt(val)}</span></div>`).join('');
 
-  // List
+  // Gas
+  const gasEntries = carExpenses.filter(c=>c.cat==='Gasolina'&&c.km).sort((a,b)=>b.km-a.km);
+  if(gasEntries.length>=2) {
+    const last=gasEntries[0], prev=gasEntries[1];
+    document.getElementById('home-gas').textContent = `Último llenado: ${fmt(last.amount)} — recorriste ${last.km-prev.km} km desde el anterior.`;
+  } else {
+    document.getElementById('home-gas').textContent = 'Registra gastos de gasolina con km para ver el consumo.';
+  }
+}
+
+function renderCarroHistorial() {
   const el = document.getElementById('car-list');
   const sorted = [...carExpenses].sort((a,b)=>b.date.localeCompare(a.date));
-  if(!sorted.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🚗</div>Sin gastos de carro</div>'; return; }
+  if(!sorted.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🚗</div>Sin gastos de auto</div>'; return; }
   el.innerHTML = sorted.map((t,i)=>`
     <div class="tx-item">
       <div class="tx-icon car">🚗</div>
       <div class="tx-info"><div class="tx-name">${t.cat}${t.desc?' — '+t.desc:''}</div><div class="tx-date">${t.date}${t.km?' · '+t.km+' km':''}</div></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         <div class="tx-amount car">${fmt(t.amount)}</div>
-        <button class="btn-sm danger" onclick="deleteCar(${i})">✕</button>
+        <button class="btn-sm danger" onclick="deleteCar('${t.id}')">✕</button>
       </div>
     </div>`).join('');
 }
 
 function saveCar() {
-  const cat = document.getElementById('car-cat').value;
-  const desc = document.getElementById('car-desc').value.trim();
   const amount = parseFloat(document.getElementById('car-amount').value);
   const date = document.getElementById('car-date').value;
-  const km = document.getElementById('car-km').value;
   if(!amount||!date) { alert('Completa los campos requeridos'); return; }
-  carExpenses.unshift({ cat, desc, amount, date, km: km?parseInt(km):null, id: Date.now() });
+  carExpenses.unshift({ cat:document.getElementById('car-cat').value, desc:document.getElementById('car-desc').value.trim(), amount, date, km:document.getElementById('car-km').value?parseInt(document.getElementById('car-km').value):null, id:Date.now() });
   S.set('ap_car', carExpenses);
   closeModal('modal-car');
   document.getElementById('car-desc').value=''; document.getElementById('car-amount').value=''; document.getElementById('car-km').value='';
-  renderCarro(); renderHome();
+  renderCarroResumen(); renderCarroHistorial();
 }
 
-function deleteCar(i) {
+function deleteCar(id) {
   if(!confirm('¿Eliminar este gasto?')) return;
-  carExpenses.splice(i,1);
+  carExpenses = carExpenses.filter(c=>c.id!=id);
   S.set('ap_car', carExpenses);
-  renderCarro(); renderHome();
+  renderCarroResumen(); renderCarroHistorial();
 }
 
 // ============ INSTAGRAM ============
@@ -903,7 +1422,6 @@ const HASHTAGS = {
   '🌆 Calle': ['#fotografiadecalle','#streetphotography','#callejesrd','#urbanphotography'],
   '🔥 Generales': ['#photography','#photographer','#fotografia','#lightroom','#behindthelens']
 };
-
 const REELS = [
   { icon:'🎬', title:'Antes y después', desc:'Foto sin editar vs editada. Muy viral.', steps:['Captura de pantalla sin editar','Graba tu pantalla editando en Lightroom','Une con transición al centro','Música dramática','Texto: "De esto a esto en 10 minutos 👀"'] },
   { icon:'🎥', title:'Behind the scenes', desc:'Grábate durante una sesión.', steps:['Pídele a alguien que te grabe','Captura: preparar equipo, dirigir modelo, revisar foto','Corta los mejores 15-30 seg','Texto: "Así se ve una sesión con Adicto Pic"','Termina con la foto final'] },
@@ -912,7 +1430,6 @@ const REELS = [
 ];
 
 function renderIG() {
-  // Calendar
   const cal = document.getElementById('ig-cal');
   cal.innerHTML = '';
   const days=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -927,16 +1444,12 @@ function renderIG() {
     cell.innerHTML=`<div class="cal-dn">${days[d.getDay()]}</div><div class="cal-num">${d.getDate()}</div>${pt?`<div class="cal-badge ${pt}">${pt}</div>`:''}`;
     cal.appendChild(cell);
   }
-
-  // Hashtags
   const hEl = document.getElementById('ig-hashtags');
   hEl.innerHTML = Object.entries(HASHTAGS).map(([cat,tags])=>`
     <div style="margin-bottom:0.75rem">
       <div style="font-size:11px;color:var(--gray);margin-bottom:4px">${cat}</div>
       ${tags.map(t=>`<span class="htag ${selectedHashtags.has(t)?'selected':''}" onclick="toggleHtag(this,'${t}')">${t}</span>`).join('')}
     </div>`).join('');
-
-  // Reels
   const rEl = document.getElementById('ig-reels');
   rEl.innerHTML = REELS.map((r,i)=>`
     <div class="reel-card" onclick="toggleReel(${i})">
@@ -944,9 +1457,7 @@ function renderIG() {
         <span style="font-size:1.3rem">${r.icon}</span>
         <div><div style="font-size:14px;font-weight:500">${r.title}</div><div style="font-size:12px;color:var(--gray)">${r.desc}</div></div>
       </div>
-      <div class="reel-steps" id="reel-${i}">
-        ${r.steps.map((s,j)=>`<div class="step"><div class="step-n">${j+1}</div>${s}</div>`).join('')}
-      </div>
+      <div class="reel-steps" id="reel-${i}">${r.steps.map((s,j)=>`<div class="step"><div class="step-n">${j+1}</div>${s}</div>`).join('')}</div>
     </div>`).join('');
 }
 
@@ -956,17 +1467,12 @@ function toggleHtag(el, tag) {
   document.getElementById('ig-selected-preview').textContent=[...selectedHashtags].join(' ');
   document.getElementById('ig-htag-count').textContent=selectedHashtags.size;
 }
-
 function copyHashtags() {
   if(!selectedHashtags.size){alert('Selecciona hashtags primero');return;}
   navigator.clipboard.writeText([...selectedHashtags].join(' '));
   alert('✅ Hashtags copiados');
 }
-
-function toggleReel(i) {
-  const el=document.getElementById('reel-'+i);
-  el.classList.toggle('open');
-}
+function toggleReel(i) { document.getElementById('reel-'+i).classList.toggle('open'); }
 
 async function generateCaption() {
   const type=document.getElementById('ig-type').value;
@@ -977,16 +1483,14 @@ async function generateCaption() {
   const dots=document.getElementById('ig-dots');
   const result=document.getElementById('ig-result');
   const copyBtn=document.getElementById('ig-copy-btn');
-
   btn.disabled=true; dots.className='dots visible'; result.className='result-box'; copyBtn.style.display='none';
-
   try {
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:`Eres el asistente de redes sociales de "Adicto Pic", fotógrafo profesional en Santiago, República Dominicana.\n\nGenera UN caption para Instagram:\n- Tipo de sesión: ${type}\n- Tono: ${tone}\n- Idioma: ${lang}\n- Detalles: ${extra||'ninguno'}\n\nEl caption debe:\n1. Tener 2-4 líneas de texto principal\n2. Incluir 1-2 emojis\n3. Llamada a la acción (DM o WhatsApp)\n4. 📍 Santiago, RD\n5. 5-8 hashtags relevantes para fotógrafo dominicano\n\nSolo devuelve el caption, sin explicaciones.`}]})});
     const data=await res.json();
     result.textContent=data.content[0].text;
     result.className='result-box visible fade';
     copyBtn.style.display='block';
-  } catch(e) { result.textContent='Error. Intenta de nuevo.'; result.className='result-box visible'; }
+  } catch(e) { result.textContent='Error al generar. Revisa tu conexión.'; result.className='result-box visible'; }
   btn.disabled=false; dots.className='dots';
 }
 
@@ -997,58 +1501,9 @@ function copyCaption() {
   setTimeout(()=>btn.textContent='📋 Copiar caption',2000);
 }
 
-// ============ CLIENTES ============
-function renderClientes() {
-  const total=clients.length;
-  const pending=clients.filter(c=>c.status==='pendiente'||c.status==='confirmado').length;
-  document.getElementById('cl-total').textContent=total;
-  document.getElementById('cl-pending').textContent=pending;
-
-  const el=document.getElementById('cl-list');
-  if(!clients.length){el.innerHTML='<div class="empty"><div class="empty-icon">👥</div>Sin clientes registrados</div>';return;}
-  const statusColors={pendiente:'amber',confirmado:'blue',completado:'green',cancelado:'red'};
-  const sorted=[...clients].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  el.innerHTML=sorted.map((c,i)=>`
-    <div class="tx-item" style="flex-direction:column;align-items:flex-start;gap:0.5rem">
-      <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
-        <div style="font-size:15px;font-weight:500">${c.name}</div>
-        <span class="tag tag-${statusColors[c.status]||'amber'}">${c.status}</span>
-      </div>
-      <div style="font-size:13px;color:var(--gray)">${c.session} · ${c.date||'Sin fecha'} · ${fmt(c.amount||0)}</div>
-      ${c.phone?`<div style="font-size:13px;color:#7eb8f7">${c.phone}</div>`:''}
-      ${c.notes?`<div style="font-size:12px;color:var(--gray2)">${c.notes}</div>`:''}
-      <button class="btn-sm danger" onclick="deleteCliente(${i})" style="align-self:flex-end">✕ Eliminar</button>
-    </div>`).join('');
-}
-
-function saveCliente() {
-  const name=document.getElementById('cl-name').value.trim();
-  if(!name){alert('Escribe el nombre del cliente');return;}
-  clients.unshift({
-    name, phone:document.getElementById('cl-phone').value.trim(),
-    session:document.getElementById('cl-session').value,
-    status:document.getElementById('cl-status').value,
-    date:document.getElementById('cl-date').value,
-    amount:parseFloat(document.getElementById('cl-amount').value)||0,
-    notes:document.getElementById('cl-notes').value.trim(),
-    id:Date.now()
-  });
-  S.set('ap_clients',clients);
-  closeModal('modal-cliente');
-  ['cl-name','cl-phone','cl-date','cl-amount','cl-notes'].forEach(id=>document.getElementById(id).value='');
-  renderClientes();
-}
-
-function deleteCliente(i) {
-  if(!confirm('¿Eliminar este cliente?')) return;
-  clients.splice(i,1);
-  S.set('ap_clients',clients);
-  renderClientes();
-}
-
 // ============ INIT ============
-renderHome();
-renderIG();
+document.getElementById('header-date').textContent = new Date().toLocaleDateString('es-DO',{weekday:'short',day:'numeric',month:'short'});
+renderPersonalResumen();
 </script>
 </body>
 </html>
