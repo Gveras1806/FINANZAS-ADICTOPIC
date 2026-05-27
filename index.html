@@ -2,11 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Adicto Pic">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#0a0a0a" id="meta-theme-color">
+<meta name="description" content="App personal de Adicto Pic — Fotografía, Finanzas y Auto">
+<link rel="manifest" href="manifest.json">
 <title>Adicto Pic App</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -367,6 +369,109 @@ textarea { resize: none; height: 70px; }
 /* SCROLLBAR */
 ::-webkit-scrollbar { width: 0; }
 
+/* ── SAFE AREA (iPhone notch / home bar) ── */
+body { padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
+.scroll-area { overscroll-behavior-y: contain; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  left: 50%; transform: translateX(-50%) translateY(12px);
+  background: #1e1e1e;
+  color: #f0ece6;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 100px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-family: var(--font-b);
+  white-space: nowrap;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, transform .25s;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#toast.success { border-color: rgba(46,204,113,0.3); }
+#toast.error   { border-color: rgba(192,57,43,0.4); }
+
+/* ── EXPORT/SETTINGS MODAL ── */
+.settings-row { display:flex; justify-content:space-between; align-items:center; padding:.65rem 0; border-bottom:1px solid var(--border); font-size:14px; }
+.settings-row:last-child { border-bottom:none; }
+.settings-key { color:var(--gray); font-size:13px; }
+.settings-val { font-weight:500; font-size:13px; }
+
+/* ── CLIENT SEARCH ── */
+#cl-search {
+  width:100%; background:var(--surface2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--white); font-family:var(--font-b);
+  font-size:14px; padding:.6rem .9rem; outline:none; margin-bottom:.75rem;
+}
+#cl-search:focus { border-color:rgba(192,57,43,.5); }
+
+/* ── SWIPE DELETE HINT ── */
+.tx-item { position: relative; }
+
+/* ── KPI TREND BADGE ── */
+.trend-badge {
+  display:inline-flex; align-items:center; gap:3px;
+  font-size:11px; padding:2px 7px; border-radius:4px; font-weight:500;
+}
+.trend-up   { background:rgba(46,204,113,.15); color:var(--green2); }
+.trend-down { background:rgba(192,57,43,.15);  color:var(--red2); }
+.trend-flat { background:rgba(136,136,136,.15);color:var(--gray); }
+
+/* ── RESULT BOX FADE ANIM ── */
+.result-box.fade { animation: fadeIn .35s ease; }
+
+/* ── BOTTOM NAV ACTIVE DOT ── */
+.nav-item.active::after {
+  content:''; display:block; width:4px; height:4px;
+  background:var(--red); border-radius:50%; margin:-2px auto 0;
+}
+
+/* ── CARD GRADIENT IMPROVEMENT ── */
+.card-bank {
+  background: linear-gradient(135deg, #1a1a1a 0%, #222 60%, #1c1c1c 100%);
+}
+
+/* ── STAT CARD HOVER ── */
+.stat-card { transition: border-color .15s; }
+.stat-card:active { border-color: rgba(192,57,43,.3); }
+
+/* ── PROGRESS BAR ANIMATION ── */
+.progress-fill { transition: width .6s cubic-bezier(.4,0,.2,1); }
+
+/* ── CLIENT STATUS INDICATOR ── */
+.status-dot {
+  width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:5px; flex-shrink:0;
+}
+
+/* ── FUEL TRACK ── */
+.fuel-track { background:var(--surface3); border-radius:100px; height:8px; overflow:hidden; margin:6px 0; }
+.fuel-fill  { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--green2),var(--amber2),var(--red2)); transition:width .5s; }
+
+/* ── SECTION BADGE COUNT ── */
+.tab-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--red); color:#fff; border-radius:100px;
+  font-size:9px; font-weight:700; min-width:16px; height:16px;
+  padding:0 4px; margin-left:3px;
+}
+
+/* ── EMPTY STATE IMPROVEMENT ── */
+.empty { padding:2.5rem 1rem; }
+.empty-icon { font-size:2.8rem; margin-bottom:.65rem; opacity:.6; }
+
+/* ── HEADER EXPORT BTN ── */
+.header-action-btn {
+  background:none; border:none; color:var(--gray); font-size:20px;
+  cursor:pointer; padding:2px 4px; border-radius:6px; transition:color .15s;
+}
+.header-action-btn:active { color:var(--white); }
+
+
 /* META CARD */
 .meta-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 14px; }
 .meta-row:last-child { border-bottom: none; }
@@ -405,13 +510,19 @@ textarea { resize: none; height: 70px; }
 
 <div class="app-header">
   <div class="header-top">
-    <div class="app-logo">Adicto <span>Pic</span></div>
-    <div class="header-date" id="header-date"></div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div class="app-logo">Adicto <span>Pic</span></div>
+      <span id="save-dot" style="width:6px;height:6px;background:var(--green2);border-radius:50%;opacity:0;transition:opacity .3s;flex-shrink:0;"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="header-date" id="header-date"></div>
+      <button class="header-action-btn" onclick="openSettings()" title="Configuración">⚙️</button>
+    </div>
   </div>
   <!-- MAIN TABS -->
   <div class="main-tabs">
     <button class="main-tab active" onclick="showMain('personal', this)">🏠 Personal</button>
-    <button class="main-tab" onclick="showMain('fotografia', this)">📸 Fotografía</button>
+    <button class="main-tab" onclick="showMain('fotografia', this)">📸 Fotografía<span class="tab-badge" id="tab-badge-foto" style="display:none">0</span></button>
     <button class="main-tab" onclick="showMain('auto', this)">🚗 Auto</button>
   </div>
 </div>
@@ -431,18 +542,42 @@ textarea { resize: none; height: 70px; }
     <div class="page active" id="personal-resumen">
       <div class="page-label">Personal</div>
       <div class="page-title">Mi vida 🏠</div>
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-label">Gastos hogar este mes</div>
-          <div class="stat-value purple" id="p-total-mes">RD$0</div>
+      <!-- Tasa del dólar -->
+      <div id="dolar-banner" style="display:flex;background:linear-gradient(90deg,rgba(41,128,185,.15),rgba(41,128,185,.05));border:1px solid rgba(126,184,247,.2);border-radius:10px;padding:.55rem .9rem;margin-bottom:.75rem;align-items:center;justify-content:space-between;gap:8px;">
+        <span style="font-size:11px;color:var(--gray);white-space:nowrap;">💵 Cibao</span>
+        <div style="display:flex;align-items:center;gap:5px;flex:1;justify-content:center;">
+          <span style="font-size:14px;font-weight:500;color:var(--blue2);" id="dolar-rate">Cargando...</span>
+          <input id="dolar-rate-input" type="number" step="0.01" min="50" max="100" placeholder="62.00"
+            style="display:none;width:78px;font-size:13px;padding:3px 7px;background:var(--surface2);border:1px solid rgba(126,184,247,.5);border-radius:6px;color:var(--blue2);text-align:center;"
+            onkeydown="if(event.key==='Enter')applyManualRate()" onblur="applyManualRate()">
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Total tarjetas</div>
-          <div class="stat-value red" id="p-total-tarjetas">RD$0</div>
+        <button onclick="toggleRateEdit()" style="flex-shrink:0;background:rgba(126,184,247,.12);border:1px solid rgba(126,184,247,.25);color:var(--blue2);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;white-space:nowrap;" id="dolar-edit-btn">✏️ Editar</button>
+        <span style="font-size:10px;color:var(--gray2);white-space:nowrap;" id="dolar-updated"></span>
+      </div>
+
+      <!-- KPIs consolidados -->
+      <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.5rem;">
+        <div class="stat-card" style="padding:.7rem .75rem;">
+          <div class="stat-label" style="font-size:10px;">🏠 Hogar</div>
+          <div class="stat-value purple" id="p-total-mes" style="font-size:1.1rem;">RD$0</div>
+        </div>
+        <div class="stat-card" style="padding:.7rem .75rem;">
+          <div class="stat-label" style="font-size:10px;">💳 Tarjetas</div>
+          <div class="stat-value red" id="p-total-tarjetas" style="font-size:1.1rem;">RD$0</div>
+        </div>
+        <div class="stat-card" style="padding:.7rem .75rem;">
+          <div class="stat-label" style="font-size:10px;">🚗 Auto</div>
+          <div class="stat-value amber" id="p-total-auto" style="font-size:1.1rem;">RD$0</div>
         </div>
       </div>
+      <div class="stat-card" style="margin-bottom:.85rem;background:linear-gradient(135deg,var(--surface),var(--surface2));">
+        <div class="stat-label">💸 Gasto total consolidado este mes</div>
+        <div class="stat-value red" id="p-total-consolidado" style="font-size:1.6rem;">RD$0</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:3px;" id="p-total-breakdown"></div>
+      </div>
+
       <div class="card">
-        <div class="card-label">Últimos gastos personales</div>
+        <div class="card-label">Últimos movimientos (todos)</div>
         <div id="p-recent-list"></div>
       </div>
       <div class="card">
@@ -579,7 +714,10 @@ textarea { resize: none; height: 70px; }
     <div class="page" id="fotografia-clientes">
       <div class="page-label">CRM</div>
       <div class="page-title">Mis clientes</div>
-      <button class="btn btn-red" onclick="openModal('modal-cliente')" style="margin-bottom:0.85rem">+ Agregar cliente</button>
+      <div style="display:flex;gap:.5rem;margin-bottom:.85rem;">
+        <button class="btn btn-red" onclick="openModal('modal-cliente')" style="flex:1">+ Agregar cliente</button>
+      </div>
+      <input type="search" id="cl-search" placeholder="🔍 Buscar cliente..." oninput="renderClientes()">
       <div class="stat-grid">
         <div class="stat-card">
           <div class="stat-label">Total clientes</div>
@@ -689,8 +827,16 @@ textarea { resize: none; height: 70px; }
         <div id="car-summary"></div>
       </div>
       <div class="card">
-        <div class="card-label">Gasolina — consumo estimado</div>
+        <div class="card-label">⛽ Gasolina — consumo estimado</div>
         <div id="home-gas" style="font-size:14px;color:var(--gray);line-height:1.6">Sin registros de gasolina aún.</div>
+        <div id="fuel-track-wrap" style="display:none;margin-top:.75rem">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-bottom:4px;">
+            <span>Gasto en gasolina este mes</span>
+            <span id="fuel-pct-label">0%</span>
+          </div>
+          <div class="fuel-track"><div class="fuel-fill" id="fuel-fill-bar" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--gray2);margin-top:4px;" id="fuel-of-total"></div>
+        </div>
       </div>
     </div>
 
@@ -788,6 +934,12 @@ textarea { resize: none; height: 70px; }
       <label class="form-label">Kilómetros actuales (para gasolina)</label>
       <input type="number" id="car-km" placeholder="Ej: 45000">
     </div>
+    <div class="form-group">
+      <label class="form-label">💳 Tarjeta usada (opcional)</label>
+      <select id="car-card-used">
+        <option value="">— Efectivo / Sin tarjeta —</option>
+      </select>
+    </div>
     <button class="btn btn-red" onclick="saveCar()">Guardar</button>
     <button class="btn btn-ghost" onclick="closeModal('modal-car')" style="margin-top:0.5rem">Cancelar</button>
   </div>
@@ -858,13 +1010,23 @@ textarea { resize: none; height: 70px; }
     </div>
     <div class="row2">
       <div class="form-group">
-        <label class="form-label">Monto (RD$)</label>
-        <input type="number" id="p-amount" placeholder="0">
+        <label class="form-label">Monto</label>
+        <input type="number" id="p-amount" placeholder="0" oninput="updatePersonalPreview()">
       </div>
       <div class="form-group">
-        <label class="form-label">Fecha</label>
-        <input type="date" id="p-date">
+        <label class="form-label">Moneda</label>
+        <select id="p-currency" onchange="updatePersonalPreview()">
+          <option value="DOP">🇩🇴 RD$ Pesos</option>
+          <option value="USD">🇺🇸 US$ Dólares</option>
+        </select>
       </div>
+    </div>
+    <div id="p-dop-preview" style="display:none;background:rgba(41,128,185,.1);border:1px solid rgba(126,184,247,.2);border-radius:8px;padding:.5rem .75rem;margin-bottom:.65rem;font-size:13px;color:var(--blue2);">
+      💵 Equivalente en pesos: <strong id="p-dop-val">RD$0</strong>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fecha</label>
+      <input type="date" id="p-date">
     </div>
     <div class="form-group">
       <label class="form-label">Categoría</label>
@@ -904,19 +1066,33 @@ textarea { resize: none; height: 70px; }
         <input type="number" id="t-num" placeholder="1234" maxlength="4">
       </div>
       <div class="form-group">
-        <label class="form-label">Límite (RD$)</label>
-        <input type="number" id="t-limit" placeholder="0">
+        <label class="form-label">Color</label>
+        <select id="t-color">
+          <option value="red">🔴 Rojo</option>
+          <option value="blue">🔵 Azul</option>
+          <option value="green">🟢 Verde</option>
+          <option value="amber">🟠 Naranja</option>
+          <option value="purple">🟣 Morado</option>
+        </select>
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Color</label>
-      <select id="t-color">
-        <option value="red">🔴 Rojo</option>
-        <option value="blue">🔵 Azul</option>
-        <option value="green">🟢 Verde</option>
-        <option value="amber">🟠 Naranja</option>
-        <option value="purple">🟣 Morado</option>
+      <label class="form-label">Tipo de moneda</label>
+      <select id="t-currency" onchange="onTarjetaCurrencyChange()">
+        <option value="DOP">🇩🇴 Solo Pesos (RD$)</option>
+        <option value="USD">🇺🇸 Solo Dólares (US$)</option>
+        <option value="DUAL">🔄 Dual — acepta RD$ y US$</option>
       </select>
+    </div>
+    <div class="row2" id="t-limits-wrap">
+      <div class="form-group">
+        <label class="form-label" id="t-limit-label">Límite RD$</label>
+        <input type="number" id="t-limit" placeholder="0">
+      </div>
+      <div class="form-group" id="t-limit-usd-wrap" style="display:none">
+        <label class="form-label">Límite US$</label>
+        <input type="number" id="t-limit-usd" placeholder="0">
+      </div>
     </div>
     <button class="btn btn-red" onclick="saveTarjeta()">Guardar tarjeta</button>
     <button class="btn btn-ghost" onclick="closeModal('modal-tarjeta')" style="margin-top:0.5rem">Cancelar</button>
@@ -930,7 +1106,7 @@ textarea { resize: none; height: 70px; }
     <div class="modal-title">Agregar consumo</div>
     <div class="form-group">
       <label class="form-label">Tarjeta</label>
-      <select id="c-card"></select>
+      <select id="c-card" onchange="onConsumoCardChange()"></select>
     </div>
     <div class="form-group">
       <label class="form-label">Descripción</label>
@@ -938,13 +1114,23 @@ textarea { resize: none; height: 70px; }
     </div>
     <div class="row2">
       <div class="form-group">
-        <label class="form-label">Monto (RD$)</label>
-        <input type="number" id="c-amount" placeholder="0">
+        <label class="form-label">Monto</label>
+        <input type="number" id="c-amount" placeholder="0" oninput="updateConsumoPreview()">
       </div>
-      <div class="form-group">
+      <div class="form-group" id="c-date-wrap">
         <label class="form-label">Fecha</label>
         <input type="date" id="c-date">
       </div>
+    </div>
+    <div class="form-group" id="c-currency-wrap" style="display:none">
+      <label class="form-label">💱 Moneda del consumo</label>
+      <select id="c-currency" onchange="updateConsumoPreview()">
+        <option value="DOP">🇩🇴 Pesos (RD$)</option>
+        <option value="USD">🇺🇸 Dólares (US$)</option>
+      </select>
+    </div>
+    <div id="c-dop-preview" style="display:none;background:rgba(41,128,185,.1);border:1px solid rgba(126,184,247,.2);border-radius:8px;padding:.5rem .75rem;margin-bottom:.65rem;font-size:13px;color:var(--blue2);">
+      💵 Equivalente: <strong id="c-dop-val">RD$0</strong>
     </div>
     <div class="form-group">
       <label class="form-label">Categoría</label>
@@ -955,6 +1141,7 @@ textarea { resize: none; height: 70px; }
         <option value="Salud">🏥 Salud</option>
         <option value="Ropa">👕 Ropa</option>
         <option value="Viaje">✈️ Viaje</option>
+        <option value="Auto">🚗 Auto</option>
         <option value="Otro">Otro</option>
       </select>
     </div>
@@ -966,9 +1153,48 @@ textarea { resize: none; height: 70px; }
 <script>
 // ============ STORAGE ============
 const S = {
-  get: k => { try { return JSON.parse(localStorage.getItem(k)) || [] } catch(e){ return [] } },
-  set: (k,v) => localStorage.setItem(k, JSON.stringify(v)),
-  getObj: k => { try { return JSON.parse(localStorage.getItem(k)) || {} } catch(e){ return {} } }
+  get(k) {
+    try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : []; }
+    catch(e) { console.warn('S.get', k, e); return []; }
+  },
+  set(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); S._flash(); return true; }
+    catch(e) {
+      if(e.name === 'QuotaExceededError') { toast('⚠️ Almacenamiento lleno. Exporta tus datos.','error'); }
+      return false;
+    }
+  },
+  getObj(k) {
+    try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : {}; }
+    catch(e) { return {}; }
+  },
+  _flash() {
+    const el = document.getElementById('save-dot');
+    if(el) { el.style.opacity='1'; clearTimeout(S._t); S._t = setTimeout(()=>el.style.opacity='0',1600); }
+  },
+  _t: null,
+  storageKB() {
+    let b = 0;
+    for(let k in localStorage) { if(localStorage.hasOwnProperty(k)) b += (localStorage[k].length + k.length) * 2; }
+    return Math.round(b / 1024);
+  },
+  exportAll() {
+    const keys = ['ap_tx','ap_car','ap_clients','ap_personal','ap_tarjetas','ap_consumos'];
+    const data = { v:2, exported: new Date().toISOString(), store:{} };
+    keys.forEach(k => { const v = localStorage.getItem(k); if(v) data.store[k] = JSON.parse(v); });
+    return data;
+  },
+  importAll(obj) {
+    try {
+      const d = typeof obj === 'string' ? JSON.parse(obj) : obj;
+      const store = d.store || d; // support both v2 and raw
+      Object.entries(store).forEach(([k,v]) => localStorage.setItem(k, JSON.stringify(v)));
+      return true;
+    } catch(e) { return false; }
+  },
+  clearAll() {
+    ['ap_tx','ap_car','ap_clients','ap_personal','ap_tarjetas','ap_consumos'].forEach(k => localStorage.removeItem(k));
+  }
 };
 
 // ============ DATA ============
@@ -1027,6 +1253,7 @@ function refreshSection(name) {
 function renderSubPage(section, sub) {
   if(section==='personal') {
     if(sub==='resumen') renderPersonalResumen();
+fetchDolarCibao(); // Fetch live dollar rate from Asoc. Cibao
     if(sub==='gastos') renderPersonalGastos();
     if(sub==='tarjetas') renderTarjetas();
   }
@@ -1047,19 +1274,23 @@ function openModal(id) {
   document.getElementById(id).classList.add('open');
   document.querySelectorAll('#'+id+' input[type="date"]').forEach(d => { if(!d.value) d.value = today(); });
   if(id==='modal-personal') populateCardSelect('p-card-used');
-  if(id==='modal-consumo') populateCardSelect('c-card');
+  if(id==='modal-consumo') { populateCardSelect('c-card'); onConsumoCardChange(); }
+  if(id==='modal-car')     { populateCardSelect('car-card-used'); }
+  if(id==='modal-tarjeta') { onTarjetaCurrencyChange(); }
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function closeModalOutside(e, id) { if(e.target.id===id) closeModal(id); }
 
 function populateCardSelect(elId) {
   const sel = document.getElementById(elId);
-  const isOptional = elId === 'p-card-used';
+  if(!sel) return;
+  const isOptional = elId !== 'c-card';
   sel.innerHTML = isOptional ? '<option value="">— Efectivo / Sin tarjeta —</option>' : '';
   tarjetas.forEach(t => {
     const opt = document.createElement('option');
     opt.value = t.id;
-    opt.textContent = `${t.name} •••• ${t.num}`;
+    const currLabel = t.currency==='USD' ? ' 🇺🇸 USD' : t.currency==='DUAL' ? ' 🔄 Dual' : '';
+    opt.textContent = `${t.name} •••• ${t.num}${currLabel}`;
     sel.appendChild(opt);
   });
 }
@@ -1067,35 +1298,80 @@ function populateCardSelect(elId) {
 // ============ PERSONAL — RESUMEN ============
 function renderPersonalResumen() {
   const m = thisMonth();
+  const rate = window._dolarRate || 62;
+
+  // Gastos hogar
   const totalMes = personalGastos.filter(g=>monthOf(g.date)===m).reduce((s,g)=>s+g.amount,0);
-  const totalTarjetas = consumos.filter(c=>monthOf(c.date)===m).reduce((s,c)=>s+c.amount,0);
-  document.getElementById('p-total-mes').textContent = fmt(totalMes);
-  document.getElementById('p-total-tarjetas').textContent = fmt(totalTarjetas);
 
-  // Recent gastos
-  const recent = [...personalGastos].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
+  // Tarjetas — usar amountDOP (ya convertido al guardar)
+  const totalTarjetas = consumos.filter(c=>monthOf(c.date)===m).reduce((s,c)=>s+(c.amountDOP||c.amount),0);
+
+  // Auto este mes
+  const totalAuto = carExpenses.filter(c=>monthOf(c.date)===m).reduce((s,c)=>s+c.amount,0);
+
+  // TOTAL CONSOLIDADO
+  const totalConsolidado = totalMes + totalTarjetas + totalAuto;
+
+  document.getElementById('p-total-mes').textContent        = fmt(totalMes);
+  document.getElementById('p-total-tarjetas').textContent   = fmt(totalTarjetas);
+  document.getElementById('p-total-auto').textContent       = fmt(totalAuto);
+  document.getElementById('p-total-consolidado').textContent = fmt(totalConsolidado);
+  document.getElementById('p-total-breakdown').textContent  =
+    `Hogar ${fmt(totalMes)} + Tarjetas ${fmt(totalTarjetas)} + Auto ${fmt(totalAuto)}`;
+
+  // Recent — merge all 3 sources, sorted by date
+  const allMovements = [
+    ...personalGastos.map(g=>({ ...g, _src:'hogar',   _icon:'🏠', _color:'personal' })),
+    ...consumos.map(c=>{
+      const t = tarjetas.find(t=>String(t.id)===String(c.cardId));
+      return { ...c, _src:'tarjeta', _icon:'💳', _color:'expense',
+               _label: t ? t.name+' ••'+t.num : 'Tarjeta',
+               amount: c.amountDOP || c.amount };
+    }),
+    ...carExpenses.map(c=>({ ...c, _src:'auto', _icon:'🚗', _color:'car',
+               desc: c.cat+(c.desc?' — '+c.desc:'') }))
+  ].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,6);
+
   const rEl = document.getElementById('p-recent-list');
-  if(!recent.length) { rEl.innerHTML = '<div class="empty"><div class="empty-icon">🏠</div>Sin gastos personales aún</div>'; }
-  else rEl.innerHTML = recent.map(g=>`
-    <div class="tx-item">
-      <div class="tx-icon personal">🏠</div>
-      <div class="tx-info"><div class="tx-name">${g.desc}</div><div class="tx-date">${g.date} · ${g.cat}</div></div>
-      <div class="tx-amount personal">-${fmt(g.amount)}</div>
-    </div>`).join('');
+  if(!allMovements.length) {
+    rEl.innerHTML = '<div class="empty"><div class="empty-icon">🏠</div>Sin movimientos aún</div>';
+  } else {
+    rEl.innerHTML = allMovements.map(g=>`
+      <div class="tx-item">
+        <div class="tx-icon ${g._color||'personal'}">${g._icon||'🏠'}</div>
+        <div class="tx-info">
+          <div class="tx-name">${g.desc||g.cat||'—'}</div>
+          <div class="tx-date">${g.date||''} · ${g._label||g.cat||g._src}</div>
+        </div>
+        <div class="tx-amount ${g._color||'personal'}">-${fmt(g.amount)}</div>
+      </div>`).join('');
+  }
 
-  // Card summary
+  // Card summary — show DOP equivalent for USD cards
   const cardSummary = {};
   consumos.filter(c=>monthOf(c.date)===m).forEach(c=>{
-    if(!cardSummary[c.cardId]) cardSummary[c.cardId] = 0;
-    cardSummary[c.cardId] += c.amount;
+    if(!cardSummary[c.cardId]) cardSummary[c.cardId] = { dop:0, raw:0, currency:'DOP' };
+    cardSummary[c.cardId].dop  += (c.amountDOP || c.amount);
+    cardSummary[c.cardId].raw  += c.amount;
+    cardSummary[c.cardId].currency = c.currency || 'DOP';
   });
   const csEl = document.getElementById('p-card-summary');
-  if(!Object.keys(cardSummary).length) { csEl.innerHTML = '<div style="font-size:13px;color:var(--gray)">Sin consumos en tarjetas este mes.</div>'; return; }
-  csEl.innerHTML = Object.entries(cardSummary).map(([cid, total])=>{
-    const t = tarjetas.find(t=>t.id==cid);
+  if(!Object.keys(cardSummary).length) {
+    csEl.innerHTML = '<div style="font-size:13px;color:var(--gray)">Sin consumos en tarjetas este mes.</div>';
+    return;
+  }
+  csEl.innerHTML = Object.entries(cardSummary).map(([cid, data])=>{
+    const t = tarjetas.find(t=>String(t.id)===String(cid));
     if(!t) return '';
     const col = COLOR_MAP[t.color] || COLOR_MAP.blue;
-    return `<div class="meta-row"><span class="meta-key" style="color:${col.text}">${t.name} ••${t.num}</span><span>${fmt(total)}</span></div>`;
+    const isUSD = data.currency === 'USD';
+    const amtDisplay = isUSD
+      ? `US$${data.raw.toLocaleString('es-DO',{minimumFractionDigits:2})} <span style="font-size:11px;color:var(--gray2)">≈ ${fmt(data.dop)}</span>`
+      : fmt(data.dop);
+    return `<div class="meta-row">
+      <span class="meta-key" style="color:${col.text}">${t.name} ••${t.num}${isUSD?' 🇺🇸':''}</span>
+      <span style="font-size:13px;">${amtDisplay}</span>
+    </div>`;
   }).join('');
 }
 
@@ -1114,26 +1390,52 @@ function renderPersonalGastos() {
 
   const el = document.getElementById('p-gastos-list');
   if(!list.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🏠</div>Sin gastos personales</div>'; return; }
-  el.innerHTML = list.map((g,i)=>`
+  el.innerHTML = list.map((g,i)=>{
+    const isUSD = g.currency === 'USD';
+    const amtDisplay = isUSD
+      ? `US$${Number(g.amountOriginal||g.amount).toLocaleString('es-DO',{minimumFractionDigits:2})}`
+      : fmt(g.amount);
+    const dopLine = isUSD ? ` ≈ ${fmt(g.amount)}` : '';
+    const rateHint = isUSD && g.rate ? ` · tasa RD$${g.rate}` : '';
+    return `
     <div class="tx-item">
       <div class="tx-icon personal">🏠</div>
-      <div class="tx-info"><div class="tx-name">${g.desc}</div><div class="tx-date">${g.date} · ${g.cat}${g.cardId?` · 💳 ${tarjetas.find(t=>t.id==g.cardId)?.name||''}`:''}</div></div>
+      <div class="tx-info"><div class="tx-name">${g.desc}</div><div class="tx-date">${g.date} · ${g.cat}${g.cardId?` · 💳 ${tarjetas.find(t=>t.id==g.cardId)?.name||''}`:''}</div>${isUSD?`<div style="font-size:11px;color:var(--gray2)">${fmt(g.amount)}${rateHint}</div>`:''}</div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-        <div class="tx-amount personal">-${fmt(g.amount)}</div>
+        <div class="tx-amount personal">-${amtDisplay}</div>
         <button class="btn-sm danger" onclick="deletePersonalGasto(${i})">✕</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function savePersonalGasto() {
-  const desc = document.getElementById('p-desc').value.trim();
-  const amount = parseFloat(document.getElementById('p-amount').value);
-  const date = document.getElementById('p-date').value;
-  if(!desc||!amount||!date) { alert('Completa los campos'); return; }
-  personalGastos.unshift({ desc, amount, date, cat:document.getElementById('p-cat').value, cardId:document.getElementById('p-card-used').value||null, id:Date.now() });
+  const desc     = document.getElementById('p-desc').value.trim();
+  const amount   = parseFloat(document.getElementById('p-amount').value);
+  const date     = document.getElementById('p-date').value;
+  const currency = document.getElementById('p-currency')?.value || 'DOP';
+  if(!desc||!amount||!date) { toast('Completa los campos'); return; }
+  const isUSD   = currency === 'USD';
+  const rate    = window._dolarRate || 62;
+  const amountDOP = isUSD ? Math.round(amount * rate * 100) / 100 : amount;
+  personalGastos.unshift({
+    desc,
+    amount: amountDOP,           // siempre en RD$ para totales
+    amountOriginal: amount,      // monto original (USD si aplica)
+    currency,
+    rate: isUSD ? rate : null,
+    date,
+    cat: document.getElementById('p-cat').value,
+    cardId: document.getElementById('p-card-used').value || null,
+    id: Date.now()
+  });
   S.set('ap_personal', personalGastos);
   closeModal('modal-personal');
-  document.getElementById('p-desc').value=''; document.getElementById('p-amount').value='';
+  document.getElementById('p-desc').value = '';
+  document.getElementById('p-amount').value = '';
+  if(document.getElementById('p-currency')) document.getElementById('p-currency').value = 'DOP';
+  if(document.getElementById('p-dop-preview')) document.getElementById('p-dop-preview').style.display = 'none';
+  toast('✅ Gasto guardado' + (isUSD ? ' → ' + fmt(amountDOP) : ''));
   renderPersonalGastos(); renderPersonalResumen();
 }
 
@@ -1153,25 +1455,103 @@ function deletePersonalGasto(i) {
 // ============ TARJETAS ============
 function renderTarjetas() {
   const m = thisMonth();
+  const rate = window._dolarRate || 62;
   const el = document.getElementById('tarjetas-list');
-  if(!tarjetas.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">💳</div>No tienes tarjetas registradas</div>'; }
-  else {
+
+  if(!tarjetas.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">💳</div>No tienes tarjetas registradas</div>';
+  } else {
     el.innerHTML = tarjetas.map((t,i)=>{
-      const col = COLOR_MAP[t.color] || COLOR_MAP.blue;
-      const gastado = consumos.filter(c=>c.cardId==t.id&&monthOf(c.date)===m).reduce((s,c)=>s+c.amount,0);
-      const pct = t.limit ? Math.min(100, Math.round(gastado/t.limit*100)) : 0;
-      const fillCls = pct>85?'fill-red':pct>60?'fill-amber':'fill-green';
+      const col   = COLOR_MAP[t.color] || COLOR_MAP.blue;
+      const isDOP  = t.currency === 'DOP';
+      const isUSD  = t.currency === 'USD';
+      const isDual = t.currency === 'DUAL';
+
+      // Consumos registrados en la tarjeta
+      const cMes   = consumos.filter(c=>c.cardId==t.id && monthOf(c.date)===m);
+      const gastadoUSD = cMes.filter(c=>c.currency==='USD').reduce((s,c)=>s+c.amount,0);
+      const gastadoDOP = cMes.filter(c=>c.currency!=='USD').reduce((s,c)=>s+c.amount,0);
+      const gastadoDOPfromUSD = cMes.filter(c=>c.currency==='USD').reduce((s,c)=>s+(c.amountDOP||c.amount*rate),0);
+
+      // Gastos personales vinculados a esta tarjeta
+      const personalMes = personalGastos.filter(g=>String(g.cardId)===String(t.id)&&monthOf(g.date)===m);
+      const personalDOP = personalMes.reduce((s,g)=>s+(g.amount||0),0);
+
+      // Gastos de auto vinculados a esta tarjeta
+      const carMes = carExpenses.filter(c=>String(c.cardId)===String(t.id)&&monthOf(c.date)===m);
+      const carDOP = carMes.reduce((s,c)=>s+(c.amount||0),0);
+
+      // Total DOP equivalente (consumos+personal+auto)
+      const totalDOP = gastadoDOP + gastadoDOPfromUSD + personalDOP + carDOP;
+      const totalUSD = gastadoUSD;
+
+      // Límite y porcentaje (en DOP)
+      const limitDOP = t.limit ? (isUSD ? t.limit*rate : t.limit) : 0;
+      const limitUSD = t.limitUSD || 0;
+      const pctDOP = limitDOP ? Math.min(100, Math.round(totalDOP/limitDOP*100)) : 0;
+      const pctUSD = limitUSD ? Math.min(100, Math.round(totalUSD/limitUSD*100)) : 0;
+      const pct    = isDual ? Math.max(pctDOP, pctUSD) : (limitDOP ? pctDOP : 0);
+      const fillCls = pct>=100?'fill-red':pct>=80?'fill-amber':'fill-green';
+
+      // Alerta de límite
+      const alertStr = pct>=100
+        ? `<div style="background:rgba(231,76,60,.18);border:1px solid rgba(231,76,60,.4);border-radius:6px;padding:.35rem .75rem;margin:.4rem 0;font-size:12px;color:var(--red2);">🚨 Límite superado (${pct}%) — detente!</div>`
+        : pct>=80
+        ? `<div style="background:rgba(243,156,18,.13);border:1px solid rgba(243,156,18,.3);border-radius:6px;padding:.35rem .75rem;margin:.4rem 0;font-size:12px;color:var(--amber2);">⚠️ Próximo al límite — ${pct}% consumido</div>`
+        : '';
+
+      // Display principal según moneda de la tarjeta
+      let mainDisplay, subDisplay = '';
+      if(isDual) {
+        mainDisplay = `<span style="color:var(--blue2)">US$${gastadoUSD.toLocaleString('es-DO',{minimumFractionDigits:2})}</span>` +
+                      `<span style="color:var(--gray);font-size:1rem;margin:0 6px">+</span>` +
+                      `<span style="color:${col.text}">${fmt(gastadoDOP + personalDOP + carDOP)}</span>`;
+        subDisplay = `<div style="font-size:12px;color:var(--gray);margin-top:2px;">Total en RD$ ≈ ${fmt(totalDOP)} · Tasa RD$${rate}</div>`;
+      } else if(isUSD) {
+        mainDisplay = `<span style="color:${col.text}">US$${totalUSD.toLocaleString('es-DO',{minimumFractionDigits:2})}</span>`;
+        subDisplay  = `<div style="font-size:12px;color:var(--gray);margin-top:2px;">≈ ${fmt(totalDOP)} · Tasa RD$${rate}</div>`;
+      } else {
+        mainDisplay = `<span style="color:${col.text}">${fmt(totalDOP)}</span>`;
+      }
+
+      // Extra lines por categorías sumadas
+      const extraLines = [];
+      if(personalDOP > 0) extraLines.push(`🏠 Gastos personales: ${fmt(personalDOP)}`);
+      if(carDOP > 0)      extraLines.push(`🚗 Auto: ${fmt(carDOP)}`);
+      const extrasHtml = extraLines.length
+        ? `<div style="font-size:11px;color:var(--gray2);margin-top:3px;">${extraLines.join(' · ')}</div>`
+        : '';
+
+      // Progress bars para DUAL
+      const progressHtml = isDual
+        ? `${limitUSD?`<div class="progress-wrap"><div class="progress-label"><span>US$ ${totalUSD.toFixed(2)} / ${limitUSD}</span><span>${pctUSD}%</span></div><div class="progress-bar"><div class="progress-fill ${pctUSD>=100?'fill-red':pctUSD>=80?'fill-amber':'fill-blue'}" style="width:${pctUSD}%"></div></div></div>`:''}
+           ${limitDOP?`<div class="progress-wrap"><div class="progress-label"><span>RD$ ${fmt(gastadoDOP+personalDOP+carDOP)} / ${fmt(t.limit)}</span><span>${pctDOP}%</span></div><div class="progress-bar"><div class="progress-fill ${pctDOP>=100?'fill-red':pctDOP>=80?'fill-amber':'fill-green'}" style="width:${pctDOP}%"></div></div></div>`:''}`
+        : (limitDOP?`<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill ${fillCls}" style="width:${pct}%"></div></div></div>`:'');
+
+      const limitLabel = isDual
+        ? `${limitUSD?`US$${limitUSD} / `:''}${t.limit?fmt(t.limit):''}`
+        : (t.limit ? (isUSD ? `US$${t.limit}` : fmt(t.limit)) : '');
+
+      const badge = isDual
+        ? `<span style="font-size:10px;background:rgba(46,204,113,.15);color:var(--green2);padding:2px 6px;border-radius:4px;font-weight:700;margin-left:4px;">DUAL</span>`
+        : isUSD
+        ? `<span style="font-size:10px;background:rgba(41,128,185,.2);color:var(--blue2);padding:2px 6px;border-radius:4px;font-weight:700;margin-left:4px;">USD</span>`
+        : '';
+
       return `<div class="card-bank" style="border-left:3px solid ${col.text}">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div>
-            <div class="card-bank-name" style="color:${col.text}">${t.name}</div>
+            <div class="card-bank-name" style="color:${col.text}">${t.name}${badge}</div>
             <div class="card-bank-num">•••• •••• •••• ${t.num}</div>
           </div>
           <button class="btn-sm danger" onclick="deleteTarjeta(${i})">✕</button>
         </div>
-        <div class="card-bank-balance" style="color:${col.text}">${fmt(gastado)}</div>
-        <div class="card-bank-limit">gastado este mes${t.limit?' de '+fmt(t.limit):''}</div>
-        ${t.limit?`<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill ${fillCls}" style="width:${pct}%"></div></div></div>`:''}
+        ${alertStr}
+        <div class="card-bank-balance" style="font-size:1.3rem;display:flex;align-items:baseline;gap:4px">${mainDisplay}</div>
+        ${subDisplay}
+        ${extrasHtml}
+        <div class="card-bank-limit">gastado este mes${limitLabel?' · límite '+limitLabel:''}</div>
+        ${progressHtml}
       </div>`;
     }).join('');
   }
@@ -1181,13 +1561,16 @@ function renderTarjetas() {
   const cEl = document.getElementById('consumos-list');
   if(!sorted.length) { cEl.innerHTML = '<div class="empty"><div class="empty-icon">💳</div>Sin consumos registrados</div>'; return; }
   cEl.innerHTML = sorted.map((c,i)=>{
-    const t = tarjetas.find(t=>t.id==c.cardId);
+    const t   = tarjetas.find(t=>t.id==c.cardId);
     const col = t ? (COLOR_MAP[t.color]||COLOR_MAP.blue) : COLOR_MAP.blue;
+    const isUSD = c.currency==='USD';
+    const displayAmt = isUSD ? `US$${Number(c.amount).toLocaleString('es-DO',{minimumFractionDigits:2})}` : fmt(c.amount);
+    const dopLine = isUSD && c.amountDOP ? ` ≈ ${fmt(c.amountDOP)}` : '';
     return `<div class="tx-item">
       <div class="tx-icon" style="background:${col.bg};color:${col.text};font-size:14px">💳</div>
-      <div class="tx-info"><div class="tx-name">${c.desc}</div><div class="tx-date">${c.date} · ${c.cat}${t?' · '+t.name:''}</div></div>
+      <div class="tx-info"><div class="tx-name">${c.desc}</div><div class="tx-date">${c.date} · ${c.cat}${t?' · '+t.name:''}${dopLine}</div></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-        <div class="tx-amount" style="color:${col.text}">-${fmt(c.amount)}</div>
+        <div class="tx-amount" style="color:${col.text}">-${displayAmt}</div>
         <button class="btn-sm danger" onclick="deleteConsumo(${i})">✕</button>
       </div>
     </div>`;
@@ -1196,11 +1579,20 @@ function renderTarjetas() {
 
 function saveTarjeta() {
   const name = document.getElementById('t-name').value.trim();
-  if(!name) { alert('Escribe el nombre de la tarjeta'); return; }
-  tarjetas.push({ name, num:document.getElementById('t-num').value.slice(-4)||'0000', limit:parseFloat(document.getElementById('t-limit').value)||0, color:document.getElementById('t-color').value, id:Date.now() });
+  if(!name) { toast('Escribe el nombre de la tarjeta'); return; }
+  const currency = document.getElementById('t-currency').value || 'DOP';
+  tarjetas.push({
+    name,
+    num:      document.getElementById('t-num').value.slice(-4)||'0000',
+    limit:    parseFloat(document.getElementById('t-limit').value)||0,
+    limitUSD: currency==='DUAL' ? (parseFloat(document.getElementById('t-limit-usd').value)||0) : 0,
+    color:    document.getElementById('t-color').value,
+    currency,
+    id: Date.now()
+  });
   S.set('ap_tarjetas', tarjetas);
   closeModal('modal-tarjeta');
-  document.getElementById('t-name').value=''; document.getElementById('t-num').value=''; document.getElementById('t-limit').value='';
+  ['t-name','t-num','t-limit','t-limit-usd'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   renderTarjetas();
 }
 
@@ -1215,28 +1607,37 @@ function deleteTarjeta(i) {
 
 function saveConsumo() {
   const cardId = document.getElementById('c-card').value;
-  const desc = document.getElementById('c-desc').value.trim();
+  const desc   = document.getElementById('c-desc').value.trim();
   const amount = parseFloat(document.getElementById('c-amount').value);
-  const date = document.getElementById('c-date').value;
-  if(!cardId||!desc||!amount||!date) { alert('Completa todos los campos'); return; }
-  consumos.unshift({ cardId, desc, amount, date, cat:document.getElementById('c-cat').value, id:Date.now() });
+  const date   = document.getElementById('c-date').value;
+  if(!cardId||!desc||!amount||!date) { toast('Completa todos los campos'); return; }
+  const card   = tarjetas.find(t=>String(t.id)===String(cardId));
+  // Determine currency: DUAL cards use c-currency selector; others use card's currency
+  const currency = card?.currency==='DUAL'
+    ? (document.getElementById('c-currency')?.value || 'DOP')
+    : (card?.currency || 'DOP');
+  const isusd    = currency === 'USD';
+  const rate     = window._dolarRate || 62;
+  const amountDOP = isusd ? Math.round(amount * rate * 100)/100 : amount;
+  consumos.unshift({ cardId, desc, amount, amountDOP, currency, date, cat:document.getElementById('c-cat').value, id:Date.now() });
   S.set('ap_consumos', consumos);
   closeModal('modal-consumo');
-  document.getElementById('c-desc').value=''; document.getElementById('c-amount').value='';
+  document.getElementById('c-desc').value='';
+  document.getElementById('c-amount').value='';
+  document.getElementById('c-dop-preview').style.display='none';
+  toast('✅ Consumo guardado'+(isusd?' → '+fmt(amountDOP):''));
   renderTarjetas(); renderPersonalResumen();
 }
 
-function deleteConsumo(i) {
-  const sorted = [...consumos].sort((a,b)=>b.date.localeCompare(a.date));
-  const target = sorted[i];
-  if(!confirm('¿Eliminar este consumo?')) return;
-  const idx = consumos.findIndex(c=>c.id===target.id);
-  if(idx>-1) consumos.splice(idx,1);
-  S.set('ap_consumos', consumos);
-  renderTarjetas(); renderPersonalResumen();
+// Also update preview when card changes
+function onConsumoCardChange() {
+  const cardId  = document.getElementById('c-card')?.value;
+  const card    = tarjetas.find(t=>String(t.id)===String(cardId));
+  const currWrap = document.getElementById('c-currency-wrap');
+  // Show currency selector only for DUAL cards
+  if(currWrap) currWrap.style.display = card?.currency==='DUAL' ? 'block' : 'none';
+  updateConsumoPreview();
 }
-
-// ============ FOTO — DASHBOARD ============
 function renderFotoDashboard() {
   const m = thisMonth();
   const inc = transactions.filter(t=>t.type==='income'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
@@ -1252,8 +1653,16 @@ function renderFotoDashboard() {
   document.getElementById('f-sesiones').textContent = ses;
 
   const dow = new Date().getDay();
-  const tips = {1:'📸 Hoy es lunes — sube una foto de trabajo entre 12pm y 1pm.',3:'🎬 Hoy es miércoles — ideal para publicar un Reel. ¡Hazlo!',5:'📸 Hoy es viernes — publica una foto entre 7pm y 9pm.',0:'📖 Hoy es domingo — sube una historia o encuesta.'};
-  document.getElementById('f-publish-tip').textContent = tips[dow] || '💡 Hoy no es día de publicar, pero puedes preparar contenido para mañana.';
+  const tips = {
+    0:'📖 Domingo — sube una historia o encuesta. Mejor hora: 7-9pm.',
+    1:'📸 Lunes — foto de trabajo o resultado de sesión. Mejor hora: 12-1pm.',
+    2:'💬 Martes — responde comentarios y DMs pendientes.',
+    3:'🎬 Miércoles — ideal para Reel. ¡El algoritmo lo empuja! Mejor hora: 6-8pm.',
+    4:'📊 Jueves — comparte un antes/después o tip de fotografía.',
+    5:'📸 Viernes — foto de lifestyle o sesión reciente. Mejor hora: 7-9pm.',
+    6:'🌅 Sábado — contenido behind-the-scenes o sesión del día.'
+  };
+  document.getElementById('f-publish-tip').innerHTML = tips[dow] || '💡 Prepara contenido para mañana.';
 
   const recent = [...transactions].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
   const rtEl = document.getElementById('f-recent-tx');
@@ -1307,11 +1716,12 @@ function saveTx() {
   const desc = document.getElementById('tx-desc').value.trim();
   const amount = parseFloat(document.getElementById('tx-amount').value);
   const date = document.getElementById('tx-date').value;
-  if(!desc||!amount||!date) { alert('Completa todos los campos'); return; }
+  if(!desc||!amount||!date) { toast('Completa todos los campos'); return; }
   transactions.unshift({ desc, amount, date, type:document.getElementById('tx-type').value, cat:document.getElementById('tx-cat').value, id:Date.now() });
   S.set('ap_tx', transactions);
   closeModal('modal-tx');
   document.getElementById('tx-desc').value=''; document.getElementById('tx-amount').value='';
+  toast('✅ Transacción guardada');
   renderFinanzas(); renderFotoDashboard();
 }
 
@@ -1325,58 +1735,128 @@ function deleteTx(id) {
 // ============ CLIENTES ============
 function renderClientes() {
   document.getElementById('cl-total').textContent = clients.length;
-  document.getElementById('cl-pending').textContent = clients.filter(c=>c.status==='pendiente'||c.status==='confirmado').length;
+  const pending = clients.filter(c=>c.status==='pendiente'||c.status==='confirmado').length;
+  document.getElementById('cl-pending').textContent = pending;
+  // Update tab badge
+  const badge = document.getElementById('tab-badge-foto');
+  if(badge){ badge.textContent=pending; badge.style.display=pending>0?'inline-flex':'none'; }
+
+  const searchVal = (document.getElementById('cl-search')?.value||'').toLowerCase().trim();
+  const statusColors={pendiente:'amber',confirmado:'blue',completado:'green',cancelado:'red'};
+  const statusDotColors={pendiente:'#f39c12',confirmado:'#7eb8f7',completado:'#2ecc71',cancelado:'#e74c3c'};
+
+  let list = [...clients].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if(searchVal) list = list.filter(c =>
+    c.name.toLowerCase().includes(searchVal) ||
+    (c.phone||'').includes(searchVal) ||
+    (c.session||'').toLowerCase().includes(searchVal)
+  );
+
   const el = document.getElementById('cl-list');
   if(!clients.length){ el.innerHTML='<div class="empty"><div class="empty-icon">👥</div>Sin clientes registrados</div>'; return; }
-  const statusColors={pendiente:'amber',confirmado:'blue',completado:'green',cancelado:'red'};
-  el.innerHTML=[...clients].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map((c,i)=>`
+  if(!list.length){ el.innerHTML='<div class="empty"><div class="empty-icon">🔍</div>Sin resultados para "'+searchVal+'"</div>'; return; }
+
+  el.innerHTML = list.map((c,i)=>`
     <div class="tx-item" style="flex-direction:column;align-items:flex-start;gap:0.5rem">
       <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
-        <div style="font-size:15px;font-weight:500">${c.name}</div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span class="status-dot" style="background:${statusDotColors[c.status]||'#f39c12'}"></span>
+          <span style="font-size:15px;font-weight:500">${c.name}</span>
+        </div>
         <span class="tag tag-${statusColors[c.status]||'amber'}">${c.status}</span>
       </div>
-      <div style="font-size:13px;color:var(--gray)">${c.session} · ${c.date||'Sin fecha'} · ${fmt(c.amount||0)}</div>
-      ${c.phone?`<div style="font-size:13px;color:var(--blue2)">${c.phone}</div>`:''}
-      ${c.notes?`<div style="font-size:12px;color:var(--gray2)">${c.notes}</div>`:''}
-      <button class="btn-sm danger" onclick="deleteCliente(${i})" style="align-self:flex-end">✕ Eliminar</button>
+      <div style="font-size:13px;color:var(--gray)">${c.session} · ${c.date||'Sin fecha'} · <strong style="color:var(--white)">${fmt(c.amount||0)}</strong></div>
+      ${c.phone?`<a href="https://wa.me/${c.phone.replace(/\D/g,'')}" target="_blank" style="font-size:13px;color:var(--green2);text-decoration:none;">📱 WhatsApp ${c.phone}</a>`:''}
+      ${c.notes?`<div style="font-size:12px;color:var(--gray2);background:var(--surface2);padding:6px 8px;border-radius:6px;width:100%">${c.notes}</div>`:''}
+      <div style="display:flex;gap:6px;align-self:flex-end">
+        <button class="btn-sm" onclick="editClientStatus('${c.id}')">✏️ Estado</button>
+        <button class="btn-sm danger" onclick="deleteClienteById('${c.id}')">✕ Eliminar</button>
+      </div>
     </div>`).join('');
 }
 
 function saveCliente() {
   const name = document.getElementById('cl-name').value.trim();
-  if(!name){ alert('Escribe el nombre del cliente'); return; }
+  if(!name){ toast('Escribe el nombre del cliente'); return; }
   clients.unshift({ name, phone:document.getElementById('cl-phone').value.trim(), session:document.getElementById('cl-session').value, status:document.getElementById('cl-status').value, date:document.getElementById('cl-date').value, amount:parseFloat(document.getElementById('cl-amount').value)||0, notes:document.getElementById('cl-notes').value.trim(), id:Date.now() });
   S.set('ap_clients', clients);
   closeModal('modal-cliente');
   ['cl-name','cl-phone','cl-date','cl-amount','cl-notes'].forEach(id=>document.getElementById(id).value='');
+  toast('✅ Cliente guardado');
   renderClientes();
 }
 
-function deleteCliente(i) {
+function deleteClienteById(id) {
   if(!confirm('¿Eliminar este cliente?')) return;
-  clients.splice(i,1);
+  clients = clients.filter(c=>String(c.id)!==String(id));
   S.set('ap_clients', clients);
   renderClientes();
+  toast('Cliente eliminado');
+}
+// legacy alias
+function deleteCliente(i) { deleteClienteById(clients[i]?.id); }
+
+function editClientStatus(id) {
+  const c = clients.find(c=>String(c.id)===String(id));
+  if(!c) return;
+  const statuses = ['pendiente','confirmado','completado','cancelado'];
+  const curr = statuses.indexOf(c.status);
+  const next = statuses[(curr+1) % statuses.length];
+  c.status = next;
+  S.set('ap_clients', clients);
+  renderClientes();
+  toast('Estado → ' + next);
 }
 
 // ============ CARRO ============
 function renderCarroResumen() {
   const m = thisMonth();
-  document.getElementById('car-total').textContent = fmt(carExpenses.reduce((s,t)=>s+t.amount,0));
-  document.getElementById('car-month').textContent = fmt(carExpenses.filter(t=>monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0));
+  const total = carExpenses.reduce((s,t)=>s+t.amount,0);
+  const monthTotal = carExpenses.filter(t=>monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);
+  document.getElementById('car-total').textContent = fmt(total);
+  document.getElementById('car-month').textContent = fmt(monthTotal);
+
   const cats = {};
   carExpenses.forEach(t=>{ cats[t.cat]=(cats[t.cat]||0)+t.amount; });
   const sumEl = document.getElementById('car-summary');
-  if(!Object.keys(cats).length) sumEl.innerHTML = '<div style="font-size:13px;color:var(--gray)">Sin gastos registrados.</div>';
-  else sumEl.innerHTML = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`<div class="meta-row"><span class="meta-key">${cat}</span><span>${fmt(val)}</span></div>`).join('');
+  if(!Object.keys(cats).length) {
+    sumEl.innerHTML = '<div style="font-size:13px;color:var(--gray)">Sin gastos registrados.</div>';
+  } else {
+    const catIcons = {Gasolina:'⛽',Mecánico:'🔧',Seguro:'🛡️','ITBIS/Marbete':'📋',Lavado:'🧼',Aceite:'🛢️',Gomas:'⚫',Parqueo:'🅿️',Otro:'🔖'};
+    sumEl.innerHTML = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>{
+      const pct = total>0 ? Math.round(val/total*100) : 0;
+      return `<div class="meta-row">
+        <span class="meta-key">${catIcons[cat]||'🔖'} ${cat}</span>
+        <span style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--gray2)">${pct}%</span>
+          <span>${fmt(val)}</span>
+        </span>
+      </div>`;
+    }).join('');
+  }
 
-  // Gas
-  const gasEntries = carExpenses.filter(c=>c.cat==='Gasolina'&&c.km).sort((a,b)=>b.km-a.km);
-  if(gasEntries.length>=2) {
-    const last=gasEntries[0], prev=gasEntries[1];
-    document.getElementById('home-gas').textContent = `Último llenado: ${fmt(last.amount)} — recorriste ${last.km-prev.km} km desde el anterior.`;
+  // Gas tracking
+  const gasEntries = carExpenses.filter(c=>c.cat==='Gasolina').sort((a,b)=>(b.km||0)-(a.km||0));
+  const gasWithKm  = gasEntries.filter(c=>c.km);
+  if(gasWithKm.length>=2) {
+    const last=gasWithKm[0], prev=gasWithKm[1];
+    const kmDiff = last.km - prev.km;
+    document.getElementById('home-gas').innerHTML = `Último llenado: <strong style="color:var(--white)">${fmt(last.amount)}</strong> — recorriste <strong style="color:var(--amber2)">${kmDiff} km</strong> desde el anterior.`;
+  } else if(gasEntries.length) {
+    document.getElementById('home-gas').textContent = `${gasEntries.length} carga(s) registrada(s). Agrega km para calcular consumo.`;
   } else {
     document.getElementById('home-gas').textContent = 'Registra gastos de gasolina con km para ver el consumo.';
+  }
+
+  // Fuel progress bar
+  const gasMonth = carExpenses.filter(c=>c.cat==='Gasolina'&&monthOf(c.date)===m).reduce((s,c)=>s+c.amount,0);
+  const fuelWrap = document.getElementById('fuel-track-wrap');
+  if(fuelWrap && monthTotal > 0) {
+    fuelWrap.style.display = 'block';
+    const pct = Math.round(gasMonth/monthTotal*100);
+    document.getElementById('fuel-pct-label').textContent = pct + '%';
+    document.getElementById('fuel-fill-bar').style.width = pct + '%';
+    document.getElementById('fuel-of-total').textContent = fmt(gasMonth) + ' de ' + fmt(monthTotal) + ' total este mes';
   }
 }
 
@@ -1384,26 +1864,42 @@ function renderCarroHistorial() {
   const el = document.getElementById('car-list');
   const sorted = [...carExpenses].sort((a,b)=>b.date.localeCompare(a.date));
   if(!sorted.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🚗</div>Sin gastos de auto</div>'; return; }
-  el.innerHTML = sorted.map((t,i)=>`
-    <div class="tx-item">
+  el.innerHTML = sorted.map((t,i)=>{
+    const card = t.cardId ? tarjetas.find(c=>String(c.id)===String(t.cardId)) : null;
+    const cardTag = card ? ` · 💳 ${card.name}` : '';
+    return `<div class="tx-item">
       <div class="tx-icon car">🚗</div>
-      <div class="tx-info"><div class="tx-name">${t.cat}${t.desc?' — '+t.desc:''}</div><div class="tx-date">${t.date}${t.km?' · '+t.km+' km':''}</div></div>
+      <div class="tx-info"><div class="tx-name">${t.cat}${t.desc?' — '+t.desc:''}</div><div class="tx-date">${t.date}${t.km?' · '+t.km+' km':''}${cardTag}</div></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         <div class="tx-amount car">${fmt(t.amount)}</div>
         <button class="btn-sm danger" onclick="deleteCar('${t.id}')">✕</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function saveCar() {
   const amount = parseFloat(document.getElementById('car-amount').value);
-  const date = document.getElementById('car-date').value;
-  if(!amount||!date) { alert('Completa los campos requeridos'); return; }
-  carExpenses.unshift({ cat:document.getElementById('car-cat').value, desc:document.getElementById('car-desc').value.trim(), amount, date, km:document.getElementById('car-km').value?parseInt(document.getElementById('car-km').value):null, id:Date.now() });
+  const date   = document.getElementById('car-date').value;
+  if(!amount||!date) { toast('Completa los campos requeridos'); return; }
+  const cardId = document.getElementById('car-card-used')?.value || null;
+  carExpenses.unshift({
+    cat:    document.getElementById('car-cat').value,
+    desc:   document.getElementById('car-desc').value.trim(),
+    amount, date,
+    km:     document.getElementById('car-km').value ? parseInt(document.getElementById('car-km').value) : null,
+    cardId: cardId || null,
+    id: Date.now()
+  });
   S.set('ap_car', carExpenses);
   closeModal('modal-car');
-  document.getElementById('car-desc').value=''; document.getElementById('car-amount').value=''; document.getElementById('car-km').value='';
+  document.getElementById('car-desc').value='';
+  document.getElementById('car-amount').value='';
+  document.getElementById('car-km').value='';
+  if(document.getElementById('car-card-used')) document.getElementById('car-card-used').value='';
+  toast('✅ Gasto de auto guardado' + (cardId ? ' → 💳 tarjeta' : ''));
   renderCarroResumen(); renderCarroHistorial();
+  if(cardId) renderTarjetas();
 }
 
 function deleteCar(id) {
@@ -1468,9 +1964,9 @@ function toggleHtag(el, tag) {
   document.getElementById('ig-htag-count').textContent=selectedHashtags.size;
 }
 function copyHashtags() {
-  if(!selectedHashtags.size){alert('Selecciona hashtags primero');return;}
+  if(!selectedHashtags.size){toast('Selecciona hashtags primero');return;}
   navigator.clipboard.writeText([...selectedHashtags].join(' '));
-  alert('✅ Hashtags copiados');
+  toast('✅ Hashtags copiados');
 }
 function toggleReel(i) { document.getElementById('reel-'+i).classList.toggle('open'); }
 
@@ -1501,9 +1997,319 @@ function copyCaption() {
   setTimeout(()=>btn.textContent='📋 Copiar caption',2000);
 }
 
+
+// ============ TOAST ============
+let _toastTimer;
+function toast(msg, type='success') {
+  const el = document.getElementById('toast');
+  if(!el) return;
+  el.textContent = msg;
+  el.className = 'show ' + type;
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.className = '', 2600);
+}
+
+// ============ SETTINGS / EXPORT ============
+function openSettings() {
+  document.getElementById('st-size').textContent  = S.storageKB() + ' KB';
+  document.getElementById('st-tx').textContent    = transactions.length + ' registros';
+  document.getElementById('st-cl').textContent    = clients.length + ' registros';
+  document.getElementById('st-car').textContent   = carExpenses.length + ' registros';
+  document.getElementById('st-tarj').textContent  = tarjetas.length + ' tarjetas / ' + consumos.length + ' consumos';
+  document.getElementById('st-pers').textContent  = personalGastos.length + ' registros';
+  openModal('modal-settings');
+}
+
+function exportAllData() {
+  try {
+    const data = S.exportAll();
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], {type:'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = 'adicto-pic-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    toast('✅ Respaldo descargado');
+  } catch(e) { toast('Error al exportar: ' + e.message, 'error'); }
+}
+
+function importAllData(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const ok = S.importAll(ev.target.result);
+    if(ok) {
+      // Reload data variables
+      transactions   = S.get('ap_tx');
+      carExpenses    = S.get('ap_car');
+      clients        = S.get('ap_clients');
+      personalGastos = S.get('ap_personal');
+      tarjetas       = S.get('ap_tarjetas');
+      consumos       = S.get('ap_consumos');
+      closeModal('modal-settings');
+      toast('✅ Datos importados correctamente');
+      refreshSection(currentMain);
+    } else { toast('❌ Formato de archivo inválido', 'error'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function confirmClear() {
+  if(!confirm('⚠️ BORRAR TODOS LOS DATOS\nEsta acción NO se puede deshacer. ¿Continuar?')) return;
+  S.clearAll();
+  transactions=[]; carExpenses=[]; clients=[]; personalGastos=[]; tarjetas=[]; consumos=[];
+  closeModal('modal-settings');
+  toast('Datos borrados');
+  refreshSection(currentMain);
+}
+
+// ============ SERVICE WORKER (PWA offline) ============
+(function registerSW() {
+  if(!('serviceWorker' in navigator)) return;
+  const swCode = `
+const C='adicto-pic-v1';
+self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll([self.location.href])).then(()=>self.skipWaiting()))});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+self.addEventListener('fetch',e=>{if(e.request.url.startsWith(self.location.origin)){e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{if(res&&res.status===200){caches.open(C).then(c=>c.put(e.request,res.clone()))}return res}).catch(()=>caches.match(e.request))))}});
+`;
+  try {
+    const url = URL.createObjectURL(new Blob([swCode],{type:'application/javascript'}));
+    navigator.serviceWorker.register(url,{scope:'/'}).catch(()=>{});
+  } catch(e) {}
+})();
+
+
+// ============ TASA DEL DÓLAR — ASOCIACIÓN CIBAO ============
+window._dolarRate    = parseFloat(localStorage.getItem('ap_dolar_rate'))  || 62;
+window._dolarUpdated = localStorage.getItem('ap_dolar_updated') || '';
+
+async function fetchDolarCibao() {
+  // Show cached rate immediately
+  updateDolarBanner(window._dolarRate, window._dolarUpdated, true);
+
+  // Primary source: infodolar.com.do — Asociación Cibao page
+  const TARGET = 'https://www.infodolar.com.do/precio-dolar-entidad-asociacion-cibao-de-ahorros-y-prestamos.aspx';
+  const proxies = [
+    'https://api.allorigins.win/get?url=' + encodeURIComponent(TARGET),
+    'https://corsproxy.io/?'              + encodeURIComponent(TARGET),
+    // Fallback: generic Asociación Cibao site
+    'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.asociacioncibao.com'),
+  ];
+
+  let rate = null;
+
+  for(const url of proxies) {
+    try {
+      const res  = await fetch(url, {signal: AbortSignal.timeout(7000)});
+      const data = await res.json();
+      const body = data.contents || data.body || '';
+      if(!body) continue;
+
+      // infodolar.com.do: buscar valor de venta (~62-70)
+      // Primero intentar extraer la tasa "venta" explícitamente
+      const ventaMatch = body.match(/[Vv]enta[^<\d]{0,30}?(\d{2,3}[.,]\d{2})/);
+      if(ventaMatch) {
+        const candidate = parseFloat(ventaMatch[1].replace(',','.'));
+        if(candidate >= 55 && candidate <= 90) { rate = candidate; break; }
+      }
+
+      // Buscar todos los números en rango válido de tasa DOP/USD
+      const allNums = [...body.matchAll(/(\d{2,3}[.,]\d{2})/g)]
+        .map(m => parseFloat(m[1].replace(',','.')))
+        .filter(n => n >= 58 && n <= 90);
+
+      if(allNums.length) {
+        // Tomar la mediana para evitar falsos positivos
+        allNums.sort((a,b)=>a-b);
+        rate = allNums[Math.floor(allNums.length / 2)];
+        break;
+      }
+    } catch(e) { /* try next proxy */ }
+  }
+
+  if(!rate) {
+    // Último recurso: api.tasas.do (datos abiertos)
+    try {
+      const r2 = await fetch('https://api.tasas.do/api/v1/tasas', {signal: AbortSignal.timeout(5000)});
+      const d2 = await r2.json();
+      const cibao = d2?.data?.find?.(b => /cibao/i.test(b.entidad||b.nombre||''));
+      const entry = cibao || d2?.data?.[0];
+      if(entry) {
+        const candidate = parseFloat(entry.venta || entry.compra || entry.tasa || 0);
+        if(candidate >= 55 && candidate <= 90) rate = candidate;
+      }
+    } catch(e2) { /* ignore */ }
+  }
+
+  if(rate) {
+    window._dolarRate    = rate;
+    window._dolarUpdated = new Date().toLocaleTimeString('es-DO',{hour:'2-digit',minute:'2-digit'});
+    localStorage.setItem('ap_dolar_rate',    rate);
+    localStorage.setItem('ap_dolar_updated', window._dolarUpdated);
+    updateDolarBanner(rate, window._dolarUpdated, false);
+    renderPersonalResumen();
+    renderTarjetas();
+  } else {
+    updateDolarBanner(window._dolarRate, window._dolarUpdated, true);
+  }
+}
+
+// Preview DOP en modal de gasto personal (cuando se selecciona USD)
+function updatePersonalPreview() {
+  const currency = document.getElementById('p-currency')?.value || 'DOP';
+  const amount   = parseFloat(document.getElementById('p-amount')?.value) || 0;
+  const preview  = document.getElementById('p-dop-preview');
+  const valEl    = document.getElementById('p-dop-val');
+  if(!preview || !valEl) return;
+  if(currency === 'USD' && amount > 0) {
+    const rate = window._dolarRate || 62;
+    const dop  = amount * rate;
+    valEl.textContent = fmt(dop) + '  (tasa: RD$' + rate.toFixed(2) + ')';
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
+function updateDolarBanner(rate, updated, cached) {
+  const banner  = document.getElementById('dolar-banner');
+  const rateEl  = document.getElementById('dolar-rate');
+  const updEl   = document.getElementById('dolar-updated');
+  if(!banner || !rateEl) return;
+  banner.style.display = 'flex';
+  rateEl.textContent   = 'RD$' + Number(rate).toFixed(2) + ' / US$1';
+  if(updEl) updEl.textContent = cached ? (updated ? '⏱ ' + updated : 'Caché') : '🔄 ' + updated;
+}
+
+// Update consumo DOP preview when amount changes
+function updateConsumoPreview() {
+  const cardId   = document.getElementById('c-card')?.value;
+  const amount   = parseFloat(document.getElementById('c-amount')?.value)||0;
+  const preview  = document.getElementById('c-dop-preview');
+  const valEl    = document.getElementById('c-dop-val');
+  if(!preview || !valEl) return;
+  const card     = tarjetas.find(t=>String(t.id)===String(cardId));
+  const currency = card?.currency==='DUAL'
+    ? (document.getElementById('c-currency')?.value || 'DOP')
+    : (card?.currency || 'DOP');
+  const rate = window._dolarRate || 62;
+  if(currency === 'USD' && amount > 0) {
+    valEl.textContent = fmt(amount * rate) + ' (tasa: RD$' + rate.toFixed(2) + ')';
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
+// Tarjeta currency change — show/hide limitUSD field
+function onTarjetaCurrencyChange() {
+  const cur = document.getElementById('t-currency')?.value;
+  const usdWrap = document.getElementById('t-limit-usd-wrap');
+  const limitLabel = document.getElementById('t-limit-label');
+  if(usdWrap) usdWrap.style.display = cur==='DUAL' ? 'block' : 'none';
+  if(limitLabel) limitLabel.textContent = cur==='USD' ? 'Límite US$' : 'Límite RD$';
+}
+
+// ---- TASA MANUAL ----
+function toggleRateEdit() {
+  const input  = document.getElementById('dolar-rate-input');
+  const rateEl = document.getElementById('dolar-rate');
+  const btn    = document.getElementById('dolar-edit-btn');
+  const editing = input.style.display !== 'none';
+  if(editing) {
+    applyManualRate();
+  } else {
+    input.value = (window._dolarRate || 62).toFixed(2);
+    input.style.display = 'inline-block';
+    rateEl.style.display = 'none';
+    btn.textContent = '✅ OK';
+    setTimeout(()=>{ input.focus(); input.select(); }, 50);
+  }
+}
+
+function applyManualRate() {
+  const input  = document.getElementById('dolar-rate-input');
+  const rateEl = document.getElementById('dolar-rate');
+  const btn    = document.getElementById('dolar-edit-btn');
+  const val    = parseFloat(input.value);
+  if(val >= 50 && val <= 100) {
+    window._dolarRate    = val;
+    window._dolarUpdated = 'Manual ✏️';
+    localStorage.setItem('ap_dolar_rate',    val);
+    localStorage.setItem('ap_dolar_updated', window._dolarUpdated);
+    updateDolarBanner(val, window._dolarUpdated, false);
+    renderPersonalResumen();
+    renderTarjetas();
+    toast('💵 Tasa actualizada: RD$' + val.toFixed(2));
+  } else if(input.value) {
+    toast('Tasa inválida (debe estar entre 50 y 100)', 'error');
+  }
+  input.style.display = 'none';
+  rateEl.style.display = 'inline';
+  if(btn) btn.textContent = '✏️ Editar';
+}
+
+function deleteConsumo(i) {
+  const sorted = [...consumos].sort((a,b)=>b.date.localeCompare(a.date));
+  const target = sorted[i];
+  if(!confirm('¿Eliminar este consumo?')) return;
+  const idx = consumos.findIndex(c=>c.id===target.id);
+  if(idx>-1) consumos.splice(idx,1);
+  S.set('ap_consumos', consumos);
+  renderTarjetas(); renderPersonalResumen();
+}
+
 // ============ INIT ============
-document.getElementById('header-date').textContent = new Date().toLocaleDateString('es-DO',{weekday:'short',day:'numeric',month:'short'});
+const _now = new Date();
+document.getElementById('header-date').textContent = _now.toLocaleDateString('es-DO',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 renderPersonalResumen();
+fetchDolarCibao();
 </script>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- SETTINGS / EXPORT MODAL -->
+<div class="modal-overlay" id="modal-settings" onclick="closeModalOutside(event,'modal-settings')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Configuración y datos</div>
+
+    <div class="card" style="margin-bottom:.75rem">
+      <div class="card-label">Almacenamiento local</div>
+      <div class="settings-row"><span class="settings-key">Espacio usado</span><span class="settings-val" id="st-size">— KB</span></div>
+      <div class="settings-row"><span class="settings-key">Transacciones foto</span><span class="settings-val" id="st-tx">—</span></div>
+      <div class="settings-row"><span class="settings-key">Clientes</span><span class="settings-val" id="st-cl">—</span></div>
+      <div class="settings-row"><span class="settings-key">Gastos auto</span><span class="settings-val" id="st-car">—</span></div>
+      <div class="settings-row"><span class="settings-key">Tarjetas</span><span class="settings-val" id="st-tarj">—</span></div>
+      <div class="settings-row"><span class="settings-key">Gastos personales</span><span class="settings-val" id="st-pers">—</span></div>
+    </div>
+
+    <div style="margin-bottom:.65rem">
+      <button class="btn btn-green" onclick="exportAllData()" style="margin-bottom:.5rem">📥 Descargar respaldo JSON</button>
+      <label class="btn btn-ghost" style="display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;">
+        📤 Importar respaldo JSON
+        <input type="file" accept=".json" id="import-input" style="display:none" onchange="importAllData(event)">
+      </label>
+    </div>
+
+    <div style="margin-bottom:.65rem">
+      <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Instalar como app</div>
+      <div style="font-size:13px;color:var(--gray);line-height:1.6;background:var(--surface2);border-radius:var(--radius-sm);padding:.75rem;">
+        📱 <strong style="color:var(--white)">iPhone Safari:</strong> Compartir → "Añadir a pantalla de inicio"<br>
+        🤖 <strong style="color:var(--white)">Android Chrome:</strong> Menú → "Añadir a pantalla de inicio"
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border);padding-top:.75rem;">
+      <button class="btn" onclick="confirmClear()" style="background:rgba(192,57,43,.12);color:var(--red2);border:1px solid rgba(192,57,43,.2)">🗑 Borrar todos los datos</button>
+    </div>
+    <button class="btn btn-ghost" onclick="closeModal('modal-settings')" style="margin-top:.5rem">Cerrar</button>
+  </div>
+</div>
+
 </body>
 </html>
